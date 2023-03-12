@@ -1,0 +1,21 @@
+'use strict';
+
+const db = require('../db.js');
+const bcrypt = require('bcrypt');
+
+module.exports = {
+  name: 'sign_up',
+  fields: {
+    user_name: true,
+    user_email: true,
+    user_password: true,
+  },
+  on_message: async (conn, msg) => {
+    const users = await db.get_collection('users');
+    await users.insertOne({
+      name: msg.user_name,
+      email: msg.user_email,
+      password: await bcrypt.hash(msg.user_password, 10),
+    });
+  },
+};

@@ -1,0 +1,21 @@
+{
+  "name": "recordscratch-common",
+  "version": "0.1.0",
+  "description": "Common code for recordscratch",
+  "author": {
+    "name": "Lutopia",
+    "email": "lutopia@hotmail.fr"
+  },
+  "keywords": [
+    "audio"
+  ],
+  "dependencies": {
+    "ws": ">=7.4.6",
+    "mongodb": ">=5.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Lyatus/recordscratch.git"
+  },
+  "license": "Unlicense"
+}
