@@ -7,9 +7,11 @@ const ws = require('ws');
 
 const config = require('./config.js');
 const msg_types = [
-  require('./msg/sign_in.js'),
-  require('./msg/sign_out.js'),
-  require('./msg/sign_up.js'),
+  require('./msg/track_create.js'),
+  require('./msg/track_get.js'),
+  require('./msg/user_sign_in.js'),
+  require('./msg/user_sign_out.js'),
+  require('./msg/user_sign_up.js'),
 ];
 
 console.log(`Creating HTTP server on port ${config.port}`);
@@ -45,27 +47,31 @@ new ws.Server({
 }).on('connection', (conn, request) => {
   conn.id = next_conn_id++;
   console.log(`Connection: ${conn.id} (${request.socket.remoteAddress})`);
-  conn.on('message', async msg => {
-    const msg_object = JSON.parse(msg);
+  conn.on('message', async msg_raw => {
+    const msg = JSON.parse(msg_raw);
+    msg.reply = (msg_reply) => {
+      msg_reply.id = msg.id;
+      conn.send(JSON.stringify(msg_reply));
+    };
     for(let msg_type of msg_types) {
-      if(msg_object.type == msg_type.name) {
+      if(msg.type == msg_type.name) {
         if(msg_type.fields) {
           for(let field_name in msg_type.fields) {
-            if(!msg_object[field_name]){
-              return conn.send(JSON.stringify({
+            if(!msg[field_name]){
+              return msg.reply({
                 type: 'error',
-                text: `Missing field for '${msg_object.type}' message: ${field_name}`,
-              }));
+                text: `Missing field for '${msg.type}' message: ${field_name}`,
+              });
             }
           }
         }
-        return msg_type.on_message(conn, msg_object);
+        return msg_type.on_message(conn, msg);
       }
     }
-    conn.send(JSON.stringify({
+    msg.reply({
       type: 'error',
-      text: `Unknown message type: ${msg_object.type}`,
-    }));
+      text: `Unknown message type: ${msg.type}`,
+    });
   });
   conn.on('close', (code, reason) => {
     console.log(`Disconnection: ${conn.id} (${code}: ${reason})`);
