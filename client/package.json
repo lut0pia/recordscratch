@@ -3,7 +3,7 @@
   "productName": "recordscratch",
   "version": "0.1.0",
   "description": "Live audio sharing",
-  "main": "src/js/index.js",
+  "main": "src/js/app.js",
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",

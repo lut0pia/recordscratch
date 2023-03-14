@@ -1,7 +1,8 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const root_dir = path.join(__dirname, '../');
-const ws = require('ws');
+
+const RSWebSocket = require('./RSWebSocket.js');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -10,32 +11,21 @@ if (require('electron-squirrel-startup')) {
 
 const createWindow = () => {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  const win = new BrowserWindow({
     width: 1024,
     height: 768,
     center: true,
     webPreferences: {
-      //preload: path.join(__dirname, 'preload.js'),
+      preload: path.join(__dirname, 'preload.js'),
     },
   });
 
-  // and load the index.html of the app.
-  mainWindow.loadFile(path.join(root_dir, 'index.html'));
+  // Connect to the server
+  const ws = new RSWebSocket('ws://127.0.0.1');
+  ipcMain.handle('request', async (e, msg) => await ws.request(msg));
 
-  const wsc = new ws.WebSocket('ws://127.0.0.1', {});
-  wsc.on('error', console.error);
-  wsc.on('open', () => {
-    console.log('opened!');
-    wsc.send(JSON.stringify({
-      type: 'sign_up',
-      user_name: 'Lutopia',
-      user_email: 'lutopia@hotmail.fr',
-      user_password: 'caca',
-    }));
-  });
-  wsc.on('message', (msg, is_binary) => {
-    console.log(JSON.parse(msg));
-  });
+  // and load the index.html of the app.
+  win.loadFile(path.join(root_dir, 'index.html'));
 };
 
 // This method will be called when Electron has finished
