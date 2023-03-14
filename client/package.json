@@ -23,6 +23,7 @@
   "license": "Unlicense",
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",
+    "music-metadata": "^7.13.0",
     "nodejs": "0.0.0",
     "ws": "^8.13.0"
   },

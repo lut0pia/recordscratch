@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const root_dir = path.join(__dirname, '../');
 
+const RSLibrary = require('./RSLibrary.js');
 const RSWebSocket = require('./RSWebSocket.js');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -23,6 +24,9 @@ const createWindow = () => {
   // Connect to the server
   const ws = new RSWebSocket('ws://127.0.0.1');
   ipcMain.handle('request', async (e, msg) => await ws.request(msg));
+
+  // Create library
+  const lib = new RSLibrary();
 
   // and load the index.html of the app.
   win.loadFile(path.join(root_dir, 'index.html'));
