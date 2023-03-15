@@ -6,12 +6,12 @@
     "name": "Lutopia",
     "email": "lutopia@hotmail.fr"
   },
+  "main": "src/index.js",
   "keywords": [
     "audio"
   ],
   "dependencies": {
-    "ws": ">=7.4.6",
-    "mongodb": ">=5.1.0"
+    "music-metadata": "^7.13.0"
   },
   "repository": {
     "type": "git",

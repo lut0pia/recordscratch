@@ -1,5 +1,5 @@
 const fs = require('fs/promises');
-const mm = require('music-metadata');
+const common = require('recordscratch-common');
 
 class RSLibrary {
   constructor() {
@@ -31,14 +31,8 @@ class RSLibrary {
       if(file_stat.isDirectory()) {
         await this.scan_directory(file_path);
       } else if(file.match(/\.(mp3|m4a|ogg)$/i) && !this.tracks.find(t => t.file_path == file_path)) {
-        const metadata = await mm.parseFile(file_path);
-        this.add_track({
-          file_path: file_path,
-          title: metadata.common.title || 'Unknown',
-          artist: metadata.common.artist || metadata.common.albumartist || 'Unknown',
-          album: metadata.common.album || 'Unknown',
-          duration: metadata.format.duration,
-        });
+        const track = await common.RSTrack.from_file_path(file_path);
+        this.add_track(track);
       }
     }
   }
