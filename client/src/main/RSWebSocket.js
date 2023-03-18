@@ -27,4 +27,4 @@ class RSWebSocket {
   }
 };
 
-module.exports = RSWebSocket;
+export default RSWebSocket;

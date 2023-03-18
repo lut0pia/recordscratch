@@ -51,4 +51,4 @@ class RSLibrary {
   }
 };
 
-module.exports = RSLibrary;
+export default RSLibrary;
