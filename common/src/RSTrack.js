@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const mm = require('music-metadata');
 
 class RSTrack {
@@ -17,6 +18,10 @@ class RSTrack {
       album: metadata.common.album || 'Unknown',
       duration: metadata.format.duration,
     };
+  }
+
+  static get_hash_from_buffer(buffer) {
+    return crypto.createHash('sha256').update(buffer).digest('hex');
   }
 };
 
