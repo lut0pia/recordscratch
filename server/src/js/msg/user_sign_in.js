@@ -9,7 +9,7 @@ module.exports = {
     user_email: true,
     user_password: true,
   },
-  on_message: async (conn, msg) => {
+  on_message: async (server, conn, msg) => {
     if(conn.user_id) {
       await msg.reply({
         status: 'error',

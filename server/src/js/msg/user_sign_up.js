@@ -10,7 +10,7 @@ module.exports = {
     user_email: true,
     user_password: true,
   },
-  on_message: async (conn, msg) => {
+  on_message: async (server, conn, msg) => {
     const users = await db.get_collection('users');
     const existing_user = await users.findOne({
       email: msg.user_email,

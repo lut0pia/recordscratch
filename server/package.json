@@ -10,9 +10,10 @@
     "audio"
   ],
   "dependencies": {
-    "ws": "7.4.6",
+    "bcrypt": "5.1.0",
     "mongodb": "5.1.0",
-    "bcrypt": "5.1.0"
+    "recordscratch-common": "file:../common",
+    "ws": "7.4.6"
   },
   "repository": {
     "type": "git",

@@ -4,15 +4,10 @@ process.title = 'recordscratch-server';
 
 const http = require('http');
 const ws = require('ws');
+const RSServer = require('./RSServer.js');
 
 const config = require('./config.js');
-const msg_types = [
-  require('./msg/track_create.js'),
-  require('./msg/track_get.js'),
-  require('./msg/user_sign_in.js'),
-  require('./msg/user_sign_out.js'),
-  require('./msg/user_sign_up.js'),
-];
+const server = new RSServer();
 
 console.log(`Creating HTTP server on port ${config.port}`);
 const http_server = http.createServer(async (request, response) => {
@@ -41,39 +36,27 @@ const http_server = http.createServer(async (request, response) => {
 http_server.listen(config.port);
 
 console.log(`Creating WS server on port ${config.port}`);
-let next_conn_id = 0;
 new ws.Server({
   server: http_server,
 }).on('connection', (conn, request) => {
-  conn.id = next_conn_id++;
-  console.log(`Connection: ${conn.id} (${request.socket.remoteAddress})`);
-  conn.on('message', async msg_raw => {
-    const msg = JSON.parse(msg_raw);
-    msg.reply = (msg_reply) => {
-      msg_reply.id = msg.id;
-      conn.send(JSON.stringify(msg_reply));
-    };
-    for(let msg_type of msg_types) {
-      if(msg.type == msg_type.name) {
-        if(msg_type.fields) {
-          for(let field_name in msg_type.fields) {
-            if(!msg[field_name]){
-              return msg.reply({
-                type: 'error',
-                text: `Missing field for '${msg.type}' message: ${field_name}`,
-              });
-            }
-          }
-        }
-        return msg_type.on_message(conn, msg);
-      }
+  conn.send_msg = (msg) => {
+    conn.send(JSON.stringify(msg));
+  };
+  server.on_connection(conn, request);
+  conn.on('message', async (msg_raw, is_binary) => {
+    if(is_binary) {
+      server.on_binary_message(conn, msg_raw);
+      return;
+    } else {
+      const msg = JSON.parse(msg_raw);
+      msg.reply = (msg_reply) => {
+        msg_reply.id = msg.id;
+        conn.send_msg(msg_reply);
+      };
+      server.on_message(conn, msg);
     }
-    msg.reply({
-      type: 'error',
-      text: `Unknown message type: ${msg.type}`,
-    });
   });
   conn.on('close', (code, reason) => {
-    console.log(`Disconnection: ${conn.id} (${code}: ${reason})`);
+    server.on_disconnection(conn, code, reason)
   });
 });

@@ -7,7 +7,7 @@ module.exports = {
   fields: {
     track_hash: true,
   },
-  on_message: async (conn, msg) => {
+  on_message: async (server, conn, msg) => {
     const tracks = await db.get_collection('tracks');
     const existing_track = await tracks.findOne({
       hash: msg.track_hash,
