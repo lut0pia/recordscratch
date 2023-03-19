@@ -1,12 +1,13 @@
-const crypto = require('crypto');
-const mm = require('music-metadata');
+import { createHash } from 'crypto';
+import { parseFile, parseBuffer } from 'music-metadata';
 
-class RSTrack {
+export default class RSTrack {
   static async from_buffer(buffer) {
-    return this.from_metadata(await mm.parseBuffer(buffer))
+    return this.from_metadata(await parseBuffer(buffer))
   }
+
   static async from_file_path(file_path) {
-    const track = this.from_metadata(await mm.parseFile(file_path));
+    const track = this.from_metadata(await parseFile(file_path));
     track.file_path = file_path;
     return track;
   }
@@ -21,8 +22,6 @@ class RSTrack {
   }
 
   static get_hash_from_buffer(buffer) {
-    return crypto.createHash('sha256').update(buffer).digest('hex');
+    return createHash('sha256').update(buffer).digest('hex');
   }
 };
-
-module.exports = RSTrack;

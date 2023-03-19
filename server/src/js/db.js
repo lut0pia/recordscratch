@@ -1,31 +1,47 @@
-'use strict';
-
-const mongodb = require('mongodb');
+import mongodb from 'mongodb';
 
 let client = null;
 let db = null;
 
-module.exports.get_client_url = () => {
+function get_client_url() {
   return 'mongodb://127.0.0.1:27017';
 }
 
-module.exports.get_client = async () => {
+async function get_client() {
   if(client == null) {
-    client = new mongodb.MongoClient(this.get_client_url());
+    client = new mongodb.MongoClient(get_client_url());
     await client.connect();
   }
   return client;
 }
 
-module.exports.get_db = async () => {
+async function get_db() {
   if(db == null) {
-    const client = await this.get_client();
+    const client = await get_client();
     db = client.db('recordscratch');
+
+    // Database setup
+    const users = db.collection('users');
+    await users.dropIndexes();
+    await users.createIndex('email', {
+      unique: true,
+    });
+    /*
+    const tracks = db.collection('tracks');
+    await tracks.dropIndexes();
+    await tracks.createIndex('hash', {
+      unique: true,
+    });
+    */
   }
   return db;
 }
 
-module.exports.get_collection = async (name) => {
-  const db = await this.get_db();
+async function get_collection(name) {
+  const db = await get_db();
   return db.collection(name);
+}
+
+export default {
+  get_collection: get_collection,
 }

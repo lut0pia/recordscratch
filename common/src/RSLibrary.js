@@ -1,5 +1,5 @@
-const fs = require('fs/promises');
-const common = require('recordscratch-common');
+import fs from 'fs/promises';
+import RSTrack from './RSTrack.js';
 
 class RSLibrary {
   constructor() {
@@ -31,7 +31,7 @@ class RSLibrary {
       if(file_stat.isDirectory()) {
         await this.scan_directory(file_path);
       } else if(file.match(/\.(mp3|m4a|ogg)$/i) && !this.tracks.find(t => t.file_path == file_path)) {
-        const track = await common.RSTrack.from_file_path(file_path);
+        const track = await RSTrack.from_file_path(file_path);
         this.add_track(track);
       }
     }

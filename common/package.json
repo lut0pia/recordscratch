@@ -2,6 +2,7 @@
   "name": "recordscratch-common",
   "version": "0.1.0",
   "description": "Common code for recordscratch",
+  "type": "module",
   "author": {
     "name": "Lutopia",
     "email": "lutopia@hotmail.fr"

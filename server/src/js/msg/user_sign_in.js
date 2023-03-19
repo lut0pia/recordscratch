@@ -1,9 +1,7 @@
-'use strict';
+import db from "../db.js"
+import bcrypt from 'bcrypt'
 
-const db = require('../db.js');
-const bcrypt = require('bcrypt');
-
-module.exports = {
+export default {
   name: 'user_sign_in',
   fields: {
     user_email: true,

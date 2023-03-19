@@ -1,13 +1,17 @@
-const common = require('recordscratch-common');
+import { RSTrack } from 'recordscratch-common';
+import track_get from './msg/track_get.js';
+import user_sign_in from './msg/user_sign_in.js';
+import user_sign_out from './msg/user_sign_out.js';
+import user_sign_up from './msg/user_sign_up.js';
+
 const msg_types = [
-  require('./msg/track_download.js'),
-  require('./msg/track_get.js'),
-  require('./msg/user_sign_in.js'),
-  require('./msg/user_sign_out.js'),
-  require('./msg/user_sign_up.js'),
+  track_get,
+  user_sign_in,
+  user_sign_out,
+  user_sign_up,
 ];
 
-class RSServer {
+export default class RSServer {
   constructor() {
     this.tracks = {};
     this.channels = {};
@@ -49,10 +53,10 @@ class RSServer {
   }
 
   on_binary_message(conn, buffer) {
-    const track_hash = common.RSTrack.get_hash_from_buffer(buffer);
+    const track_hash = RSTrack.get_hash_from_buffer(buffer);
     let track = this.tracks[track_hash];
     if(!track) {
-      track = common.RSTrack.from_buffer(buffer);
+      track = RSTrack.from_buffer(buffer);
       track.buffer = buffer;
       this.tracks[track_hash] = track;
       conn.send_msg({
@@ -68,5 +72,3 @@ class RSServer {
     }
   }
 };
-
-module.exports = RSServer;

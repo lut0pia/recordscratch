@@ -1,8 +1,6 @@
-'use strict';
+import db from "../db.js"
 
-const db = require('../db.js');
-
-module.exports = {
+export default {
   name: 'track_get',
   fields: {
     track_hash: true,

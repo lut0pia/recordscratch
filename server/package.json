@@ -2,6 +2,7 @@
   "name": "recordscratch-server",
   "version": "0.1.0",
   "description": "Server for recordscratch",
+  "type": "module",
   "author": {
     "name": "Lutopia",
     "email": "lutopia@hotmail.fr"

@@ -2,10 +2,11 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from './img/icon.png?asset'
-import RSLibrary from './RSLibrary.js'
-import RSWebSocket from './RSWebSocket.js'
 
-const createWindow = () => {
+const createWindow = async () => {
+  const RSLibrary = (await import('recordscratch-common')).RSLibrary;
+  const RSWebSocket = (await import('./RSWebSocket.js')).default;
+
   // Create the browser window.
   const win = new BrowserWindow({
     width: 1024,

@@ -1,12 +1,12 @@
-const ws = require('ws');
+import WebSocket from 'ws';
 
 class RSWebSocket {
   constructor(address) {
     this.msg_id = 0;
     this.requests = {};
-    const wsc = this.wsc = new ws.WebSocket(address, {});
-    wsc.on('error', console.error);
-    wsc.on('message', (msg_raw, is_binary) => {
+    const ws = this.wsc = new WebSocket(address, {});
+    ws.on('error', console.error);
+    ws.on('message', (msg_raw, is_binary) => {
       const msg = JSON.parse(msg_raw);
       if(this.requests[msg.id]) {
         this.requests[msg.id].resolve(msg);

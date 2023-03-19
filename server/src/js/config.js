@@ -1,3 +1,3 @@
-'use strict';
+import fs from 'fs';
 
-module.exports = JSON.parse(require('fs').readFileSync('config.json'))
+export default JSON.parse(fs.readFileSync('config.json'));

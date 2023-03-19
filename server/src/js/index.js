@@ -1,13 +1,10 @@
-'use strict';
+import http from 'http';
+import ws from 'ws'
+import RSServer from './RSServer.js';
+import config from './config.js';
 
-process.title = 'recordscratch-server';
-
-const http = require('http');
-const ws = require('ws');
-const RSServer = require('./RSServer.js');
-
-const config = require('./config.js');
 const server = new RSServer();
+process.title = 'recordscratch-server';
 
 console.log(`Creating HTTP server on port ${config.port}`);
 const http_server = http.createServer(async (request, response) => {
