@@ -22,8 +22,7 @@
     "@electron-toolkit/utils": "^1.0.2",
     "nodejs": "0.0.0",
     "recordscratch-common": "file:../common",
-    "vue": "^3.2.47",
-    "ws": "^8.13.0"
+    "vue": "^3.2.47"
   },
   "devDependencies": {
     "@electron/notarize": "^1.2.3",

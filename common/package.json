@@ -12,7 +12,8 @@
     "audio"
   ],
   "dependencies": {
-    "music-metadata": "^7.13.0"
+    "music-metadata": "^7.13.0",
+    "ws": "^8.13.0"
   },
   "repository": {
     "type": "git",

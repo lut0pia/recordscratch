@@ -4,8 +4,7 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from './img/icon.png?asset'
 
 const createWindow = async () => {
-  const RSLibrary = (await import('recordscratch-common')).RSLibrary;
-  const RSWebSocket = (await import('./RSWebSocket.js')).default;
+  const RSClient = (await import('recordscratch-common')).RSClient;
 
   // Create the browser window.
   const win = new BrowserWindow({
@@ -20,12 +19,9 @@ const createWindow = async () => {
     }
   });
 
-  // Connect to the server
-  const ws = new RSWebSocket('ws://127.0.0.1');
-  ipcMain.handle('request', async (e, msg) => await ws.request(msg));
-
-  // Create library
-  const lib = new RSLibrary();
+  // Create recordscratch client
+  const client = new RSClient();
+  ipcMain.handle('request', async (e, msg) => await client.handle_request(msg));
 
   win.on('ready-to-show', () => {
     win.show();
