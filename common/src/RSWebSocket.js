@@ -2,10 +2,25 @@ import WebSocket from 'ws';
 
 class RSWebSocket {
   constructor(address) {
+    this.address = address;
     this.msg_id = 0;
     this.requests = {};
-    const ws = this.wsc = new WebSocket(address, {});
+    this.reconnect_wait = 1000;
+    this.connect();
+  }
+
+  connect() {
+    const ws = this.wsc = new WebSocket(this.address, {});
     ws.on('error', console.error);
+    ws.on('open', () => {
+      console.log(`WebSocket connected`);
+      this.reconnect_wait = 1000;
+    });
+    ws.on('close', (code, reason) => {
+      console.log(`WebSocket disconnected (${code}), reconnect attempt in ${this.reconnect_wait/1000} seconds...`);
+      setTimeout(() => this.connect(), this.reconnect_wait);
+      this.reconnect_wait *= 2;
+    });
     ws.on('message', (msg_raw, is_binary) => {
       const msg = JSON.parse(msg_raw);
       if(this.requests[msg.id]) {
