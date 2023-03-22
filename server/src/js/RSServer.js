@@ -1,10 +1,16 @@
 import { RSTrack } from 'recordscratch-common';
+import RSChannel from './RSChannel.js';
+
+import channel_join from './msg/channel_join.js';
+import channel_leave from './msg/channel_leave.js';
 import track_get from './msg/track_get.js';
 import user_sign_in from './msg/user_sign_in.js';
 import user_sign_out from './msg/user_sign_out.js';
 import user_sign_up from './msg/user_sign_up.js';
 
 const msg_types = [
+  channel_join,
+  channel_leave,
   track_get,
   user_sign_in,
   user_sign_out,
@@ -70,5 +76,12 @@ export default class RSServer {
         text: 'Track with same hash already exists',
       })
     }
+  }
+
+  get_channel(channel_name) {
+    if(!this.channels[channel_name]) {
+      this.channels[channel_name] = new RSChannel(this, channel_name);
+    }
+    return this.channels[channel_name];
   }
 };
