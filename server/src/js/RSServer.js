@@ -32,6 +32,9 @@ export default class RSServer {
   }
 
   on_disconnection(conn, code, reason) {
+    if(conn.channel) {
+      conn.channel.leave(conn);
+    }
     this.connections.delete(conn);
     console.log(`Disconnection: ${conn.id} (${code}: ${reason})`);
   }
