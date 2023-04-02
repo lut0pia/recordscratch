@@ -21,7 +21,22 @@ const createWindow = async () => {
 
   // Create recordscratch client
   const client = new RSClient();
-  ipcMain.handle('request', async (e, msg) => await client.handle_request(msg));
+  const ipc_methods = RSClient.get_ipc_methods(is.dev);
+
+  for(let ipc_method of ipc_methods) {
+    ipcMain.handle(ipc_method, async (e, ...args) => {
+      let result = RSClient.prototype[ipc_method].apply(client, args)
+      if(result instanceof Promise) {
+        result = await result;
+      }
+      return result;
+    });
+  }
+  win.webContents.send('expose', ipc_methods);
+
+  client.send_ui_state = state => {
+    win.webContents.send('state', state);
+  };
 
   win.on('ready-to-show', () => {
     win.show();
