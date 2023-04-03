@@ -1,7 +1,8 @@
 import WebSocket from 'ws';
 
 class RSWebSocket {
-  constructor(address) {
+  constructor(client, address) {
+    this.client = client;
     this.address = address;
     this.msg_id = 0;
     this.requests = {};
@@ -26,6 +27,8 @@ class RSWebSocket {
       if(this.requests[msg.id]) {
         this.requests[msg.id].resolve(msg);
         delete this.requests[msg.id];
+      } else {
+        this.client.on_message(msg);
       }
     });
   }
