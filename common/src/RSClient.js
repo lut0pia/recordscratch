@@ -15,6 +15,10 @@ class RSClient {
   on_message(msg) {
     // Received a generic message not associated with a request
     switch(msg.type) {
+      case 'channel_state':
+        this.channel_state = msg.state;
+        this.update_ui_state();
+        break;
     }
   }
 
@@ -37,7 +41,7 @@ class RSClient {
 
   update_ui_state() {
     this.send_ui_state({
-      current_channel_name: this.current_channel_name,
+      channel: this.channel_state,
     });
   }
 
