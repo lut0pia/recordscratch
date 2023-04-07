@@ -9,7 +9,7 @@ export default {
   },
   on_message: async (server, conn, msg) => {
     if(conn.user_id) {
-      await msg.reply({
+      return await msg.reply({
         status: 'error',
         text: `Already signed in`,
       });
