@@ -1,4 +1,3 @@
-import { RSTrack } from 'recordscratch-common';
 import RSChannel from './RSChannel.js';
 
 import channel_join from './msg/channel_join.js';
@@ -61,26 +60,6 @@ export default class RSServer {
       type: 'error',
       text: `Unknown message type: ${msg.type}`,
     });
-  }
-
-  on_binary_message(conn, buffer) {
-    const track_hash = RSTrack.get_hash_from_buffer(buffer);
-    let track = this.tracks[track_hash];
-    if(!track) {
-      track = RSTrack.from_buffer(buffer);
-      track.buffer = buffer;
-      this.tracks[track_hash] = track;
-      conn.send_msg({
-        type: 'track_upload',
-        status: 'success',
-      });
-    } else {
-      conn.send_msg({
-        type: 'track_upload',
-        status: 'error',
-        text: 'Track with same hash already exists',
-      })
-    }
   }
 
   get_channel(channel_name) {

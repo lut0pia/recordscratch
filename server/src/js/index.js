@@ -2,6 +2,7 @@ import http from 'http';
 import ws from 'ws'
 import RSServer from './RSServer.js';
 import config from './config.js';
+import { RSWebSocketMessage }  from 'recordscratch-common';
 
 const server = new RSServer();
 process.title = 'recordscratch-server';
@@ -37,21 +38,16 @@ new ws.Server({
   server: http_server,
 }).on('connection', (conn, request) => {
   conn.send_msg = (msg) => {
-    conn.send(JSON.stringify(msg));
+    conn.send(RSWebSocketMessage.from_object(msg));
   };
   server.on_connection(conn, request);
   conn.on('message', async (msg_raw, is_binary) => {
-    if(is_binary) {
-      server.on_binary_message(conn, msg_raw);
-      return;
-    } else {
-      const msg = JSON.parse(msg_raw);
-      msg.reply = (msg_reply) => {
-        msg_reply.id = msg.id;
-        conn.send_msg(msg_reply);
-      };
-      server.on_message(conn, msg);
-    }
+    const msg = RSWebSocketMessage.to_object(msg_raw);
+    msg.reply = (msg_reply) => {
+      msg_reply.id = msg.id;
+      conn.send_msg(msg_reply);
+    };
+    server.on_message(conn, msg);
   });
   conn.on('close', (code, reason) => {
     server.on_disconnection(conn, code, reason)

@@ -1,4 +1,5 @@
 import WebSocket from 'ws';
+import RSWebSocketMessage from './RSWebSocketMessage.js';
 
 class RSWebSocket {
   constructor(client, address) {
@@ -23,7 +24,7 @@ class RSWebSocket {
       this.reconnect_wait *= 2;
     });
     ws.on('message', (msg_raw, is_binary) => {
-      const msg = JSON.parse(msg_raw);
+      const msg = RSWebSocketMessage.to_object(msg_raw);
       if(this.requests[msg.id]) {
         this.requests[msg.id].resolve(msg);
         delete this.requests[msg.id];
@@ -35,7 +36,7 @@ class RSWebSocket {
 
   async request(msg) {
     msg.id = this.msg_id++;
-    this.wsc.send(JSON.stringify(msg));
+    this.wsc.send(RSWebSocketMessage.from_object(msg));
     return new Promise((resolve, reject) => {
       this.requests[msg.id] = {
         resolve: resolve,
