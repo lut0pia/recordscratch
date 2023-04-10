@@ -1,3 +1,4 @@
+import fs from 'fs/promises';
 import RSLibrary from "./RSLibrary.js";
 import RSWebSocket from "./RSWebSocket.js";
 
@@ -39,6 +40,37 @@ class RSClient {
     });
   }
 
+  async queue_track(track) {
+    const server_track = await this.request({
+      type: 'track_get',
+      track_hash: track.hash,
+    });
+
+    // If the track couldn't be found, upload it
+    if(server_track.status == 'error') {
+      const track_buffer = await fs.readFile(track.file_path);
+      const upload_response = await this.request({
+        type: 'track_upload',
+        track_buffer: track_buffer,
+      });
+
+      if(upload_response.status == 'error') {
+        console.error(`Could not upload track: ${upload_response.text}`);
+        return;
+      }
+    }
+
+    // The track should be available to the server, queue it
+    const queue_response = await this.request({
+      type: 'track_queue',
+      track_hash: track.hash,
+    });
+
+    if(queue_response.status == 'error') {
+      console.error(`Could not queue track: ${queue_response.text}`);
+    }
+  }
+
   update_ui_state() {
     this.send_ui_state({
       channel: this.channel_state,
@@ -50,6 +82,7 @@ class RSClient {
       'get_channels',
       'get_tracks',
       'join_channel',
+      'queue_track',
     ];
     if(is_dev) {
       ipc_methods.push('request');
