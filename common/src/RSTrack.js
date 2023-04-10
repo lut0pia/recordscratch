@@ -1,13 +1,17 @@
+import fs from 'fs/promises';
 import { createHash } from 'crypto';
-import { parseFile, parseBuffer } from 'music-metadata';
+import { parseBuffer } from 'music-metadata';
 
 export default class RSTrack {
   static async from_buffer(buffer) {
-    return this.from_metadata(await parseBuffer(buffer))
+    const track = this.from_metadata(await parseBuffer(buffer));
+    track.hash = this.get_hash_from_buffer(buffer);
+    return track;
   }
 
   static async from_file_path(file_path) {
-    const track = this.from_metadata(await parseFile(file_path));
+    const track_buffer = await fs.readFile(file_path);
+    const track = await this.from_buffer(track_buffer);
     track.file_path = file_path;
     return track;
   }
