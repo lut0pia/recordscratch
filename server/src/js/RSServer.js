@@ -25,11 +25,11 @@ export default class RSServer {
     this.tracks = {};
     this.channels = {};
     this.connections = new Set();
-    this.next_conn_id = 0;
+    this.next_id = 0;
   }
 
   on_connection(conn, request) {
-    conn.id = this.next_conn_id++;
+    conn.id = this.get_next_id();
     this.connections.add(conn);
     console.log(`Connection: ${conn.id} (${request.socket.remoteAddress})`);
   }
@@ -69,5 +69,9 @@ export default class RSServer {
       this.channels[channel_name] = new RSChannel(this, channel_name);
     }
     return this.channels[channel_name];
+  }
+
+  get_next_id() {
+    return this.next_id++;
   }
 };
