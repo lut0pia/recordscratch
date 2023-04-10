@@ -4,6 +4,7 @@ import channel_join from './msg/channel_join.js';
 import channel_leave from './msg/channel_leave.js';
 import channel_list from './msg/channel_list.js';
 import track_get from './msg/track_get.js';
+import track_queue from './msg/track_queue.js';
 import track_upload from './msg/track_upload.js'
 import user_sign_in from './msg/user_sign_in.js';
 import user_sign_out from './msg/user_sign_out.js';
@@ -14,6 +15,7 @@ const msg_types = [
   channel_leave,
   channel_list,
   track_get,
+  track_queue,
   track_upload,
   user_sign_in,
   user_sign_out,
