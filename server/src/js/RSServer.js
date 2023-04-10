@@ -47,7 +47,7 @@ export default class RSServer {
           for(let field_name in msg_type.fields) {
             if(!msg[field_name]){
               return msg.reply({
-                type: 'error',
+                status: 'error',
                 text: `Missing field for '${msg.type}' message: ${field_name}`,
               });
             }
@@ -57,7 +57,7 @@ export default class RSServer {
       }
     }
     msg.reply({
-      type: 'error',
+      status: 'error',
       text: `Unknown message type: ${msg.type}`,
     });
   }
