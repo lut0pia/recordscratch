@@ -7,13 +7,12 @@
     "email": "lutopia@hotmail.fr"
   },
   "scripts": {
-    "build": "vite build",
-    "lint": "echo \"No linting configured\"",
+    "preview": "electron-vite preview",
+    "build": "electron-vite build",
     "dev": "electron-vite dev",
-    "make": "electron-forge make",
-    "package": "electron-forge package",
-    "preview": "vite preview",
-    "publish": "electron-forge publish"
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "lint": "echo \"No linting configured\""
   },
   "main": "./out/main/index.js",
   "dependencies": {
