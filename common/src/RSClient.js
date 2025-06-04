@@ -30,7 +30,7 @@ class RSClient {
     }
 
     console.error(`Could not find track ${track_hash}`);
-    return '';
+    return null;
   }
 
   get_tracks() {
