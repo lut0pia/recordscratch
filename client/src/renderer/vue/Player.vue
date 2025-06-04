@@ -57,6 +57,8 @@
           }
 
           audio.play();
+        } else {
+          audio.pause();
         }
       }, 1000);
     },
