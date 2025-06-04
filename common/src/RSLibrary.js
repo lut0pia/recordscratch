@@ -7,10 +7,10 @@ class RSLibrary {
       process.env.HOME + "/Music",
     ];
 
-
     this.tracks = [];
     this.artists = {};
     this.albums = {};
+    this.tracks_by_hash = {};
 
     for(let path of this.scan_paths) {
       this.scan_directory(path);
@@ -38,6 +38,11 @@ class RSLibrary {
   }
 
   add_track(track) {
+    if(this.tracks_by_hash[track.hash]) {
+      console.warn(`Track ${track.artist} - ${track.title} found multiple times (${track.hash.substring(0, 8)})`);
+      return;
+    }
+    this.tracks_by_hash[track.hash] = track;
     this.tracks.push(track);
     const artist = this.artists[track.artist] = this.artists[track.artist] || {
       albums: {},
