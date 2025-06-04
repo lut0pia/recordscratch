@@ -29,7 +29,7 @@ class RSClient {
       return await fs.readFile(lib_track.file_path);
     }
 
-    console.error(`Could not find track ${track.artist} - ${track.title}`);
+    console.error(`Could not find track ${track_hash}`);
     return '';
   }
 
