@@ -68,6 +68,8 @@ class RSClient {
 
     if(queue_response.status == 'error') {
       console.error(`Could not queue track: ${queue_response.text}`);
+    } else {
+      console.log(`Queued track: ${track.hash}`)
     }
   }
 

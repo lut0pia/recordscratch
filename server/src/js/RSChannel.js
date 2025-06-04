@@ -4,6 +4,7 @@ export default class RSChannel {
     this.name = name;
     this.connections = new Set();
     this.queue = [];
+    console.log(`#${this.name}: Created`);
   }
 
   join(conn) {

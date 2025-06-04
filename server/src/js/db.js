@@ -11,6 +11,7 @@ async function get_client() {
   if(client == null) {
     client = new mongodb.MongoClient(get_client_url());
     await client.connect();
+    console.log(`Connected to MongoDB server`);
   }
   return client;
 }
@@ -33,6 +34,8 @@ async function get_db() {
       unique: true,
     });
     */
+
+    console.log(`Set up MongoDB database`);
   }
   return db;
 }
