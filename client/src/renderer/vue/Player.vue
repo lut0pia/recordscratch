@@ -35,19 +35,34 @@
       },
     },
     mounted() {
-      setInterval(async () => {
-        if(this.current_post) {
+      this.interval = setInterval(async () => {
+        this.now = Date.now()
+
+        if(this.current_post && this.current_post.track) {
           const track_hash = this.current_post.track.hash;
           if(!this.track_srcs[track_hash]) {
             const buffer = await rs.get_track_buffer(track_hash);
-            //console.log(buffer);
-            const url = await URL.createObjectURL(new Blob([buffer], {type: 'audio/mp3'}));
-            this.track_srcs[track_hash] = url;
+            if(buffer) {
+              const url = await URL.createObjectURL(new Blob([buffer]));
+              this.track_srcs[track_hash] = url;
+            }
           }
+          const audio = document.getElementById('audio');
+          if(audio.src != this.track_srcs[track_hash]) {
+            audio.src = this.track_srcs[track_hash]
+          }
+          const wanted_current_time = (this.now - this.current_post.start_time) / 1000;
+          if(Math.abs(audio.currentTime - wanted_current_time) > 1) {
+            audio.currentTime = wanted_current_time;
+          }
+
+          audio.play();
         }
-        this.now = Date.now()
       }, 1000);
     },
+    unmounted() {
+      clearInterval(this.interval);
+    }
   }
 </script>
 <template>
@@ -56,7 +71,7 @@
     <div class="artist">{{current_post.track.artist}}</div>
     <div class="duration">{{time_display}}</div>
   </div>
-  <audio v-bind:src="current_post_src" controls autoplay></audio>
+  <audio id="audio"></audio>
 </template>
 <style>
   #player {
