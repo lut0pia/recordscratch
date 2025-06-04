@@ -73,6 +73,10 @@ export default class RSServer {
     return this.channels[channel_name];
   }
 
+  get_track(track_hash) {
+    return this.tracks[track_hash];
+  }
+
   get_next_id() {
     return this.next_id++;
   }
