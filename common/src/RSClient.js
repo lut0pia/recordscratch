@@ -23,6 +23,16 @@ class RSClient {
     }
   }
 
+  async get_track_buffer(track_hash) {
+    const lib_track = this.lib.tracks_by_hash[track_hash];
+    if(lib_track) {
+      return await fs.readFile(lib_track.file_path);
+    }
+
+    console.error(`Could not find track ${track.artist} - ${track.title}`);
+    return '';
+  }
+
   get_tracks() {
     return this.lib.tracks;
   }
@@ -82,6 +92,7 @@ class RSClient {
   static get_ipc_methods(is_dev) {
     const ipc_methods = [
       'get_channels',
+      'get_track_buffer',
       'get_tracks',
       'join_channel',
       'queue_track',
