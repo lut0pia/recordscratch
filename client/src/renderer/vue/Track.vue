@@ -4,8 +4,8 @@
     props: ['track'],
     computed: {
       pretty_duration() {
-        const seconds_total = Math.round(this.track.duration);
-        const minutes = Math.round(seconds_total / 60);
+        const seconds_total = Math.floor(this.track.duration);
+        const minutes = Math.floor(seconds_total / 60);
         const seconds = seconds_total % 60;
         return `${minutes}:${seconds.toString().padStart(2,'0')}`;
       }
