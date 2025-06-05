@@ -27,12 +27,6 @@
         }
         return '';
       },
-      current_post_src() {
-        if(this.current_post) {
-          return this.track_srcs[this.current_post.track.hash] || "";
-        }
-        return "";
-      },
     },
     mounted() {
       this.interval = setInterval(async () => {
