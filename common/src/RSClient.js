@@ -29,8 +29,17 @@ class RSClient {
       return await fs.readFile(lib_track.file_path);
     }
 
-    console.error(`Could not find track ${track_hash}`);
-    return null;
+    const track_download = await this.request({
+      type: 'track_download',
+      track_hash: track_hash,
+    });
+
+    if(track_download.status == 'success') {
+      return track_download.track_buffer;
+    } else {
+      console.error(`Could not find track ${track_hash}: ${track_download.text}`);
+      return null;
+    }
   }
 
   get_tracks() {
