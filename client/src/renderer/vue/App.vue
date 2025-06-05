@@ -60,7 +60,22 @@
     font-size: 32px;
     line-height: 1;
     background-color: lightgray;
-    padding: 8px;
+  }
+  #header a {
+    display: inline-block;
+    width: 50px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    border-radius: 10px;
+    background-color: white;
+    margin: 8px 0px 8px 8px;
+  }
+  #header a:hover {
+    cursor: pointer;
+  }
+  #header a.active {
+    background-color: grey;
   }
   #main {
     overflow: hidden;
