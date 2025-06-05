@@ -3,6 +3,7 @@ import RSChannel from './RSChannel.js';
 import channel_join from './msg/channel_join.js';
 import channel_leave from './msg/channel_leave.js';
 import channel_list from './msg/channel_list.js';
+import track_download from './msg/track_download.js';
 import track_get from './msg/track_get.js';
 import track_queue from './msg/track_queue.js';
 import track_upload from './msg/track_upload.js'
@@ -14,6 +15,7 @@ const msg_types = [
   channel_join,
   channel_leave,
   channel_list,
+  track_download,
   track_get,
   track_queue,
   track_upload,
