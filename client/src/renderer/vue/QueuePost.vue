@@ -6,20 +6,42 @@
     components: {
       Track,
     },
+    data() {
+      return {
+        now: Date.now(),
+      };
+    },
     computed: {
-      active() {
-        return (this.post.start_time + this.post.track.duration * 1000) >= Date.now() && this.post.start_time < Date.now();
+      post_class() {
+        if(this.post.start_time > this.now) {
+          return "future"
+        }
+        if((this.post.start_time + this.post.track.duration * 1000) <= this.now) {
+          return "past";
+        }
+        return "current";
       },
+    },
+    mounted() {
+      this.interval = setInterval(async () => {
+        this.now = Date.now()
+      }, 1000);
+    },
+    unmounted() {
+      clearInterval(this.interval);
     }
   }
 </script>
 <template>
-  <div class="post" v-bind:class="active ? 'active' : ''">
+  <div class="post" v-bind:class="post_class">
     <Track :track=post.track />
   </div>
 </template>
 <style>
-  .post.active {
+  .post.past {
+    opacity: 0.5;
+  }
+  .post.current {
     background-color: lightgrey;
   }
 </style>
