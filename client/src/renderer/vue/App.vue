@@ -3,11 +3,12 @@
 
   import Channels from './Channels.vue'
   import Library from './Library.vue'
+  import Queue from './Queue.vue'
 
   export default {
     components: {
       Player,
-      Channels, Library,
+      Channels, Library, Queue,
     },
     data() {
       return {
@@ -36,12 +37,14 @@
 </script>
 <template>
   <div id="header">
-    <a @click="select_panel('channels')">📻</a>
-    <a @click="select_panel('library')">💿</a>
+    <a title="Channels" @click="select_panel('channels')" v-bind:class="current_panel == 'channels' ? 'active' : ''">📻</a>
+    <a title="Library" @click="select_panel('library')" v-bind:class="current_panel == 'library' ? 'active' : ''">💿</a>
+    <a title="Queue" @click="select_panel('queue')" v-bind:class="current_panel == 'queue' ? 'active' : ''">☰</a>
   </div>
   <div id="main">
     <Channels v-if="current_panel == 'channels'"></Channels>
     <Library v-else-if="current_panel == 'library'"></Library>
+    <Queue v-else-if="current_panel == 'queue' && client_state.channel" :channel="client_state.channel"></Queue>
   </div>
   <Player v-if="client_state.channel" :channel="client_state.channel"></Player>
 </template>
