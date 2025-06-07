@@ -21,19 +21,17 @@ async function get_db() {
     const client = await get_client();
     db = client.db('recordscratch');
 
-    // Database setup
     const users = db.collection('users');
-    await users.dropIndexes();
+    //await users.dropIndexes();
     await users.createIndex('email', {
       unique: true,
     });
-    /*
+
     const tracks = db.collection('tracks');
-    await tracks.dropIndexes();
+    //await tracks.dropIndexes();
     await tracks.createIndex('hash', {
       unique: true,
     });
-    */
 
     console.log(`Set up MongoDB database`);
   }
