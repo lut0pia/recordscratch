@@ -1,3 +1,4 @@
-import fs from 'fs';
-
-export default JSON.parse(fs.readFileSync('config.json'));
+export default {
+  port: 80,
+  allow_origin: "ws://recordscratch.lutopia.net",
+}
