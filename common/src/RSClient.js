@@ -7,10 +7,19 @@ class RSClient {
     this.ws = new RSWebSocket(this, 'ws://127.0.0.1');
     this.lib = new RSLibrary();
     this.current_user = null;
+    this.server_diff_offset = 0;
   }
 
   async request(msg) {
     return await this.ws.request(msg);
+  }
+
+  async on_connection() {
+    const server_time = await this.ws.request({
+      type: 'time_get',
+    });
+    this.server_diff_offset = server_time.time - Date.now();
+    console.log(`Server time offset: ${this.server_diff_offset}`);
   }
 
   on_message(msg) {
@@ -21,6 +30,10 @@ class RSClient {
         this.update_ui_state();
         break;
     }
+  }
+
+  get_server_time() {
+    return Date.now() + this.server_diff_offset;
   }
 
   async get_track_buffer(track_hash) {
@@ -100,6 +113,7 @@ class RSClient {
 
   static get_ipc_methods(is_dev) {
     const ipc_methods = [
+      'get_server_time',
       'get_channels',
       'get_track_buffer',
       'get_tracks',

@@ -30,7 +30,7 @@
     },
     mounted() {
       this.interval = setInterval(async () => {
-        this.now = Date.now()
+        this.now = await rs.get_server_time();
 
         if(this.current_post && this.current_post.track) {
           const track_hash = this.current_post.track.hash;

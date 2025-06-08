@@ -24,7 +24,7 @@
     },
     mounted() {
       this.interval = setInterval(async () => {
-        this.now = Date.now()
+        this.now = await rs.get_server_time();
       }, 1000);
     },
     unmounted() {
