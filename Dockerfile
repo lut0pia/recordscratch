@@ -5,5 +5,5 @@ WORKDIR /app/server
 EXPOSE 80/tcp
 COPY ./server /app/server
 COPY ./common /app/common
-RUN npm install
+RUN npm install && npm install --prefix ../common
 CMD ["node", "src/js/index.js"]
