@@ -1,10 +1,11 @@
 import fs from 'fs/promises';
+import os from 'os';
 import RSTrack from './RSTrack.js';
 
 class RSLibrary {
   constructor() {
     this.scan_paths = [
-      process.env.HOME + "/Music",
+      os.homedir() + "/Music",
     ];
 
     this.tracks = [];
@@ -15,6 +16,8 @@ class RSLibrary {
     for(let path of this.scan_paths) {
       this.scan_directory(path);
     }
+
+    console.log(`Scan_paths: ${this.scan_paths}`);
   }
 
   async scan_directory(dir_path) {
