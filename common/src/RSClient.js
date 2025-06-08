@@ -2,9 +2,15 @@ import fs from 'fs/promises';
 import RSLibrary from "./RSLibrary.js";
 import RSWebSocket from "./RSWebSocket.js";
 
+const server_addresses = [
+  'ws://127.0.0.1:18535',
+  'ws://127.0.0.1',
+  'wss://recordscratch.lutopia.net',
+];
+
 class RSClient {
   constructor() {
-    this.ws = new RSWebSocket(this, 'ws://127.0.0.1');
+    this.ws = new RSWebSocket(this, server_addresses);
     this.lib = new RSLibrary();
     this.current_user = null;
     this.server_diff_offset = 0;

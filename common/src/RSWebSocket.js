@@ -2,20 +2,28 @@ import WebSocket from 'ws';
 import RSWebSocketMessage from './RSWebSocketMessage.js';
 
 class RSWebSocket {
-  constructor(client, address) {
+  constructor(client, addresses) {
     this.client = client;
-    this.address = address;
+    this.addresses = addresses;
+    this.address_offset = 0;
     this.msg_id = 0;
     this.requests = {};
-    this.reconnect_wait = 1000;
+    this.reconnect_wait = 100;
     this.connect();
   }
 
+  get_address() {
+    return this.addresses[this.address_offset];
+  }
+
   connect() {
-    const ws = this.wsc = new WebSocket(this.address, {});
-    ws.on('error', console.error);
+    const ws = this.wsc = new WebSocket(this.get_address(), {});
+    ws.on('error', (error) =>{
+      console.error(error);
+      this.address_offset = (this.address_offset + 1) % this.addresses.length;
+    });
     ws.on('open', () => {
-      console.log(`WebSocket connected`);
+      console.log(`WebSocket connected to ${this.get_address()}`);
       this.reconnect_wait = 1000;
       if(this.client.on_connection) {
         this.client.on_connection();
