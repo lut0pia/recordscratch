@@ -17,11 +17,17 @@ class RSWebSocket {
     ws.on('open', () => {
       console.log(`WebSocket connected`);
       this.reconnect_wait = 1000;
+      if(this.client.on_connection) {
+        this.client.on_connection();
+      }
     });
     ws.on('close', (code, reason) => {
       console.log(`WebSocket disconnected (${code}), reconnect attempt in ${this.reconnect_wait/1000} seconds...`);
       setTimeout(() => this.connect(), this.reconnect_wait);
       this.reconnect_wait *= 2;
+      if(this.client.on_disconnection) {
+        this.client.on_disconnection();
+      }
     });
     ws.on('message', (msg_raw, is_binary) => {
       const msg = RSWebSocketMessage.to_object(msg_raw);
