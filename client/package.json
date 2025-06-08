@@ -10,8 +10,8 @@
     "preview": "electron-vite preview",
     "build": "electron-vite build",
     "dev": "electron-vite dev",
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder",
+    "pack": "electron-vite build && electron-builder --dir",
+    "dist": "electron-vite build && electron-builder",
     "lint": "echo \"No linting configured\""
   },
   "main": "./out/main/index.js",
