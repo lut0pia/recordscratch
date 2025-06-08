@@ -12,9 +12,9 @@
   ],
   "dependencies": {
     "bcrypt": "5.1.0",
-    "mongodb": "5.1.0",
+    "mongodb": "^5.8.0",
     "recordscratch-common": "file:../common",
-    "ws": "7.4.6"
+    "ws": "^8.18.0"
   },
   "repository": {
     "type": "git",
