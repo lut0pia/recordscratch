@@ -14,9 +14,7 @@ export default class RSLibrary {
     this.tracks_by_hash = {};
     this.tracks_by_path = {};
 
-    for(let path of this.scan_paths) {
-      this.scan_directory(path);
-    }
+    this.scan_library();
 
     console.log(`Scan paths: ${this.scan_paths}`);
   }
@@ -41,6 +39,13 @@ export default class RSLibrary {
     }
   }
 
+  async scan_library() {
+    while(true) {
+      for(let path of this.scan_paths) {
+        await this.scan_directory(path);
+      }
+    }
+  }
   async scan_directory(dir_path) {
     let files;
     try {
