@@ -8,7 +8,7 @@ const server_addresses = [
   'wss://recordscratch.lutopia.net',
 ];
 
-class RSClient {
+export default class RSClient {
   constructor() {
     this.ws = new RSWebSocket(this, server_addresses);
     this.lib = new RSLibrary();
@@ -132,5 +132,3 @@ class RSClient {
     return ipc_methods;
   }
 };
-
-export default RSClient;

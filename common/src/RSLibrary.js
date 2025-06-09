@@ -2,7 +2,7 @@ import fs from 'fs/promises';
 import os from 'os';
 import RSTrack from './RSTrack.js';
 
-class RSLibrary {
+export default class RSLibrary {
   constructor() {
     this.scan_paths = [
       os.homedir() + "/Music",
@@ -62,5 +62,3 @@ class RSLibrary {
     album.tracks.push(track);
   }
 };
-
-export default RSLibrary;

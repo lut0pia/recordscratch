@@ -1,7 +1,7 @@
 import WebSocket from 'ws';
 import RSWebSocketMessage from './RSWebSocketMessage.js';
 
-class RSWebSocket {
+export default class RSWebSocket {
   constructor(client, addresses) {
     this.client = client;
     this.addresses = addresses;
@@ -59,5 +59,3 @@ class RSWebSocket {
     });
   }
 };
-
-export default RSWebSocket;
