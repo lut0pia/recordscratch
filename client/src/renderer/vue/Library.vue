@@ -15,6 +15,12 @@
     },
     async mounted() {
       this.tracks = await rs.get_tracks();
+      this.interval = setInterval(async () => {
+        this.tracks = await rs.get_tracks();
+      }, 60000);
+    },
+    unmounted() {
+      clearInterval(this.interval);
     },
     computed: {
       filtered_tracks() {
