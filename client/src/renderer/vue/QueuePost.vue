@@ -8,7 +8,7 @@
     },
     data() {
       return {
-        now: Date.now(),
+        now: 0,
       };
     },
     computed: {
@@ -22,7 +22,8 @@
         return "current";
       },
     },
-    mounted() {
+    async mounted() {
+      this.now = await rs.get_server_time();
       this.interval = setInterval(async () => {
         this.now = await rs.get_server_time();
       }, 1000);

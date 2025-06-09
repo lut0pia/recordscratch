@@ -5,7 +5,7 @@
     ],
     data() {
       return {
-        now: Date.now(),
+        now: 0,
         post_id: -1,
         track_srcs: {},
       };
@@ -28,7 +28,8 @@
         return '';
       },
     },
-    mounted() {
+    async mounted() {
+      this.now = await rs.get_server_time();
       this.interval = setInterval(async () => {
         this.now = await rs.get_server_time();
 
