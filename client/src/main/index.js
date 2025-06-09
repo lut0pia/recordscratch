@@ -2,10 +2,9 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from './img/icon.png?asset'
+import { RSClient } from 'recordscratch-common'
 
 const createWindow = async () => {
-  const RSClient = (await import('recordscratch-common')).RSClient;
-
   // Create the browser window.
   const win = new BrowserWindow({
     width: 1024,
@@ -14,7 +13,7 @@ const createWindow = async () => {
     autoHideMenuBar: true,
     icon: icon,
     webPreferences: {
-      preload: join(__dirname, '../preload/index.js'),
+      preload: join(__dirname, '../preload/index.mjs'),
       sandbox: false
     }
   });
