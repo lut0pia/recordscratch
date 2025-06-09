@@ -34,8 +34,12 @@ class RSLibrary {
       if(file_stat.isDirectory()) {
         await this.scan_directory(file_path);
       } else if(file.match(/\.(mp3|m4a|ogg)$/i) && !this.tracks.find(t => t.file_path == file_path)) {
-        const track = await RSTrack.from_file_path(file_path);
-        this.add_track(track);
+        try {
+          const track = await RSTrack.from_file_path(file_path);
+          this.add_track(track);
+        } catch(e) {
+          console.log(`Error reading audio file ${file_path}: ${e}`);
+        }
       }
     }
   }
