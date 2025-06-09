@@ -12,8 +12,12 @@ export default class RSClient {
   constructor() {
     this.ws = new RSWebSocket(this, server_addresses);
     this.lib = new RSLibrary();
+    this.lib.load_from_file();
     this.current_user = null;
     this.server_diff_offset = 0;
+    setInterval(async () => {
+      this.lib.save_to_file();
+    }, 60000);
   }
 
   async request(msg) {
