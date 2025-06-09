@@ -3,15 +3,17 @@ import { createHash } from 'crypto';
 import { parseBuffer } from 'music-metadata';
 
 export default class RSTrack {
-  static async from_buffer(buffer) {
-    const track = this.from_metadata(await parseBuffer(buffer));
+  static async from_buffer(buffer, file_path) {
+    const track = this.from_metadata(await parseBuffer(buffer, {
+      path: file_path,
+    }));
     track.hash = this.get_hash_from_buffer(buffer);
     return track;
   }
 
   static async from_file_path(file_path) {
     const track_buffer = await fs.readFile(file_path);
-    const track = await this.from_buffer(track_buffer);
+    const track = await this.from_buffer(track_buffer, file_path);
     track.file_path = file_path;
     return track;
   }
