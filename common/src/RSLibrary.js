@@ -20,8 +20,11 @@ export default class RSLibrary {
   }
 
   save_to_file() {
-    fs.writeFile('.library.json', JSON.stringify(this.tracks))
-    console.log(`Wrote ${this.tracks.length} tracks to disk`);
+    if(this.should_save) {
+      fs.writeFile('.library.json', JSON.stringify(this.tracks))
+      console.log(`Wrote ${this.tracks.length} tracks to disk`);
+      this.should_save = false;
+    }
   }
 
   async load_from_file() {
@@ -90,5 +93,6 @@ export default class RSLibrary {
     };
     album.name = track.album;
     album.tracks.push(track);
+    this.should_save = true;
   }
 };
