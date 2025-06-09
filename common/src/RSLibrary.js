@@ -62,7 +62,7 @@ export default class RSLibrary {
       const file_stat = await fs.stat(file_path);
       if(file_stat.isDirectory()) {
         await this.scan_directory(file_path);
-      } else if(file.match(/\.(mp3|m4a|ogg)$/i) && !this.tracks_by_path[file_path]) {
+      } else if(file.match(/\.(mp3|m4a|ogg|flac)$/i) && !this.tracks_by_path[file_path]) {
         try {
           const track = await RSTrack.from_file_path(file_path);
           this.add_track(track);
