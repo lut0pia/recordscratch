@@ -1,9 +1,7 @@
 import { contextBridge, ipcRenderer } from 'electron'
 
 ipcRenderer.on('expose', (e, message_types) => {
-  const api = {
-    on_state_update: (...args) => ipcRenderer.on('state', ...args),
-  };
+  const api = {};
   for(let message_type of message_types.in) {
     api[message_type] = async (...args) => await ipcRenderer.invoke(message_type, ...args);
   }
