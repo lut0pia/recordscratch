@@ -16,6 +16,7 @@ export default class RSClient {
     this.current_user = null;
     this.server_diff_offset = 0;
     setInterval(async () => {
+      this.update_server_time_offset();
       this.lib.save_to_file();
     }, 60000);
   }
@@ -25,11 +26,7 @@ export default class RSClient {
   }
 
   async on_connection() {
-    const server_time = await this.ws.request({
-      type: 'time_get',
-    });
-    this.server_diff_offset = server_time.time - Date.now();
-    console.log(`Server time offset: ${this.server_diff_offset}`);
+    await this.update_server_time_offset();
   }
 
   on_message(msg) {
@@ -40,6 +37,17 @@ export default class RSClient {
         this.update_ui_state();
         break;
     }
+  }
+
+  async update_server_time_offset() {
+    const before = Date.now();
+    const server_time = await this.ws.request({
+      type: 'time_get',
+    });
+    const round_trip_time = Date.now() - before;
+    const one_way_time = round_trip_time / 2;
+    this.server_diff_offset = (server_time.time + one_way_time) - Date.now();
+    console.log(`Server time offset: ${this.server_diff_offset}ms (ping: ${round_trip_time}ms)`);
   }
 
   get_server_time() {
