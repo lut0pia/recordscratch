@@ -2,7 +2,7 @@
   import QueuePost from './QueuePost.vue';
 
   export default {
-    props: ['channel'],
+    props: ['state'],
     components: {
       QueuePost,
     },
@@ -11,10 +11,10 @@
 <template>
   <div id="queue">
     <QueuePost
-      v-for="post in this.channel.queue"
-      :post=post
+      v-for="post in this.state.channel.queue"
+      :state=state :post=post
     />
-    <div v-if="this.channel.queue.length == 0">The queue is empty</div>
+    <div v-if="this.state.channel.queue.length == 0">The queue is empty</div>
   </div>
 </template>
 <style>

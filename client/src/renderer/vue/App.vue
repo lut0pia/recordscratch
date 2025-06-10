@@ -14,9 +14,7 @@
     data() {
       return {
         current_panel: 'channels',
-        client_state: {
-          channel: null,
-        },
+        state: {},
       };
     },
     methods: {
@@ -31,7 +29,7 @@
         app_el.style.height = `${window.innerHeight}px`;
       });
       rs.on_state_update((e, state) => {
-        this.client_state = state;
+        this.state = state;
       });
       rs.on_notification((e, notification) => {
         console.log(notification.text);
@@ -46,12 +44,12 @@
     <a title="Queue" @click="select_panel('queue')" v-bind:class="current_panel == 'queue' ? 'active' : ''">☰</a>
   </div>
   <div id="main">
-    <Channels v-if="current_panel == 'channels'"></Channels>
-    <Library v-else-if="current_panel == 'library'"></Library>
-    <Queue v-else-if="current_panel == 'queue' && client_state.channel" :channel="client_state.channel"></Queue>
+    <Channels v-if="current_panel == 'channels'"/>
+    <Library v-else-if="current_panel == 'library'"/>
+    <Queue v-else-if="current_panel == 'queue' && state.channel" :state=state />
   </div>
-  <NotificationTray></NotificationTray>
-  <Player v-if="client_state.channel" :channel="client_state.channel"></Player>
+  <NotificationTray/>
+  <Player v-if="state.channel" :state=state />
 </template>
 <style>
   body {

@@ -1,20 +1,40 @@
 <script>
   import { toRaw } from 'vue';
   export default {
-    props: ['track'],
+    props: ['state', 'track', 'post'],
+    data() {
+      return {
+        now: 0,
+      };
+    },
     computed: {
       pretty_duration() {
         const seconds_total = Math.floor(this.track.duration);
         const minutes = Math.floor(seconds_total / 60);
         const seconds = seconds_total % 60;
         return `${minutes}:${seconds.toString().padStart(2,'0')}`;
-      }
+      },
+      can_cancel() {
+        return this.post && this.post.user_id == this.state.user.id && this.post.start_time > this.now;
+      },
     },
     methods: {
       queue() {
         rs.queue_post(toRaw(this.track));
       },
+      cancel() {
+        rs.cancel_post(toRaw(this.post));
+      },
     },
+    async mounted() {
+      this.now = await rs.get_server_time();
+      this.interval = setInterval(async () => {
+        this.now = await rs.get_server_time();
+      }, 1000);
+    },
+    unmounted() {
+      clearInterval(this.interval);
+    }
   }
 </script>
 <template>
@@ -25,6 +45,7 @@
         <span>⭐</span>
         <span>🎧</span>
         <span @click="queue">▶</span>
+        <span v-if="can_cancel" @click="cancel">❌</span>
       </div>
     </div>
     <div class="left">

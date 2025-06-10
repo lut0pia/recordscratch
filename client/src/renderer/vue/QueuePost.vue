@@ -2,7 +2,7 @@
   import Track from './Track.vue';
 
   export default {
-    props: ['post'],
+    props: ['state', 'post'],
     components: {
       Track,
     },
@@ -38,7 +38,7 @@
 </script>
 <template>
   <div class="post" v-bind:class="post_class">
-    <Track :track=post.track />
+    <Track :state=state :track=post.track :post=post />
   </div>
 </template>
 <style>

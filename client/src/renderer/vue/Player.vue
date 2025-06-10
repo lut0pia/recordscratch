@@ -1,7 +1,7 @@
 <script>
   export default {
     props: [
-      'channel',
+      'state',
     ],
     data() {
       return {
@@ -12,10 +12,10 @@
     },
     computed: {
       current_post() {
-        if(this.channel.queue.length == 0) {
+        if(this.state.channel.queue.length == 0) {
           return null;
         } else {
-          return this.channel.queue.find(p => (p.start_time + p.track.duration * 1000) >= this.now);
+          return this.state.channel.queue.find(p => (p.start_time + p.track.duration * 1000) >= this.now);
         }
       },
       time_display() {
