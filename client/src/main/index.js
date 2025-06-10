@@ -4,6 +4,30 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from './img/icon.png?asset'
 import { RSClient } from 'recordscratch-common'
 
+// Create recordscratch client
+const client = new RSClient();
+const ipc_message_in_types = RSClient.get_ipc_message_in_types(is.dev);
+const ipc_message_out_types = RSClient.get_ipc_message_out_types();
+
+// Prepare for handling requests to the client
+for(let ipc_message of ipc_message_in_types) {
+  ipcMain.handle(ipc_message, async (e, ...args) => {
+    let result = RSClient.prototype[ipc_message].apply(client, args)
+    if(result instanceof Promise) {
+      result = await result;
+    }
+    return result;
+  });
+}
+
+// Be prepared to tell preload script which messages to expose
+ipcMain.handle('expose', e => {
+  e.sender.send('expose', {
+    in: ipc_message_in_types,
+    out: ipc_message_out_types,
+  });
+});
+
 const createWindow = async () => {
   // Create the browser window.
   const win = new BrowserWindow({
@@ -18,24 +42,12 @@ const createWindow = async () => {
     }
   });
 
-  // Create recordscratch client
-  const client = new RSClient();
-  const ipc_methods = RSClient.get_ipc_methods(is.dev);
-
-  for(let ipc_method of ipc_methods) {
-    ipcMain.handle(ipc_method, async (e, ...args) => {
-      let result = RSClient.prototype[ipc_method].apply(client, args)
-      if(result instanceof Promise) {
-        result = await result;
-      }
-      return result;
-    });
+  // Prepare for handling requests from the client
+  for(let ipc_message_type of ipc_message_out_types) {
+    RSClient.prototype['emit_'+ipc_message_type] = (...args) => {
+      win.webContents.send(ipc_message_type, ...args);
+    }
   }
-  win.webContents.send('expose', ipc_methods);
-
-  client.send_ui_state = state => {
-    win.webContents.send('state', state);
-  };
 
   win.on('ready-to-show', () => {
     win.show();

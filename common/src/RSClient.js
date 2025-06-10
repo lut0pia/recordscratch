@@ -116,13 +116,13 @@ export default class RSClient {
   }
 
   update_ui_state() {
-    this.send_ui_state({
+    this.emit_state_update({
       channel: this.channel_state,
     });
   }
 
-  static get_ipc_methods(is_dev) {
-    const ipc_methods = [
+  static get_ipc_message_in_types(is_dev) {
+    const message_types = [
       'get_server_time',
       'get_channels',
       'get_track_buffer',
@@ -131,8 +131,17 @@ export default class RSClient {
       'queue_track',
     ];
     if(is_dev) {
-      ipc_methods.push('request');
+      message_types.push('request');
     }
-    return ipc_methods;
+    return message_types;
+  }
+
+  static get_ipc_message_out_types() {
+    const message_types = [
+      'state_update',
+      'notification',
+      'play'
+    ];
+    return message_types;
   }
 };
