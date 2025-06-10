@@ -16,6 +16,9 @@
         if(this.post.start_time > this.now) {
           return "future"
         }
+        if((this.post.start_time + this.post.track.duration * 1000) <= this.now - (60 * 60 * 1000)) {
+          return "obsolete";
+        }
         if((this.post.start_time + this.post.track.duration * 1000) <= this.now) {
           return "past";
         }
@@ -44,5 +47,8 @@
   }
   .post.current {
     background-color: lightgrey;
+  }
+  .post.obsolete {
+    display: none;
   }
 </style>
