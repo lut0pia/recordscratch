@@ -6,7 +6,6 @@
     data() {
       return {
         now: 0,
-        post_id: -1,
         track_srcs: {},
       };
     },
