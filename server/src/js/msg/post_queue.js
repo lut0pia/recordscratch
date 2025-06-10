@@ -1,5 +1,5 @@
 export default {
-  name: 'track_queue',
+  name: 'post_queue',
   fields: {
     track_hash: true,
   },
@@ -19,9 +19,10 @@ export default {
       });
     }
 
-    conn.channel.queue_track(conn, track);
+    const post = conn.channel.queue_post(conn, track);
     await msg.reply({
       status: 'success',
+      post_id: post.id,
     });
   },
 };

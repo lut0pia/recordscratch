@@ -115,7 +115,7 @@ export default class RSClient {
     return result;
   }
 
-  async queue_track(track) {
+  async queue_post(track) {
     const server_track = await this.request({
       type: 'track_get',
       track_hash: track.hash,
@@ -140,7 +140,7 @@ export default class RSClient {
 
     // The track should be available to the server, queue it
     const queue_response = await this.request({
-      type: 'track_queue',
+      type: 'post_queue',
       track_hash: track.hash,
     });
 
@@ -153,6 +153,24 @@ export default class RSClient {
       this.user_log({
         type: 'log',
         text: `Queued track: ${track.artist} - ${track.title}`,
+      });
+    }
+  }
+
+  async cancel_post(post) {
+    const cancel_response = await this.request({
+      type: 'post_cancel',
+      post_id: post.id,
+    });
+    if(cancel_response.status == 'error') {
+      this.user_log({
+        type: 'error',
+        text: `Could not cancel post: ${cancel_response.text}`,
+      });
+    } else {
+      this.user_log({
+        type: 'log',
+        text: `Cancelled post: ${post.track.artist} - ${post.track.title}`,
       });
     }
   }
@@ -175,7 +193,8 @@ export default class RSClient {
       'get_track_buffer',
       'get_tracks',
       'join_channel',
-      'queue_track',
+      'queue_post',
+      'cancel_post',
     ];
     if(is_dev) {
       message_types.push('request');

@@ -12,7 +12,7 @@
     },
     methods: {
       queue() {
-        rs.queue_track(toRaw(this.track));
+        rs.queue_post(toRaw(this.track));
       },
     },
   }
