@@ -19,6 +19,8 @@ export default class RSChannel {
   leave(conn) {
     this.connections.delete(conn);
     delete conn.channel;
+    this.queue = this.queue.filter(p => p.start_time < Date.now() || p.conn != conn);
+    this.compute_queue_timings();
     this.broadcast_state();
   }
 
