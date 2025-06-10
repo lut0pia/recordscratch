@@ -27,6 +27,8 @@ export default class RSClient {
   }
 
   async on_connection() {
+    const user_response = await this.ws.request({type: 'user_get'});
+    this.user = user_response.user;
     await this.update_server_time_offset();
   }
 
@@ -177,6 +179,7 @@ export default class RSClient {
 
   update_ui_state() {
     this.emit_state_update({
+      user: this.user,
       channel: this.channel_state,
     });
   }
