@@ -1,4 +1,5 @@
 <script>
+  import NotificationTray from './NotificationTray.vue'
   import Player from './Player.vue'
 
   import Channels from './Channels.vue'
@@ -7,7 +8,7 @@
 
   export default {
     components: {
-      Player,
+      NotificationTray, Player,
       Channels, Library, Queue,
     },
     data() {
@@ -32,6 +33,9 @@
       rs.on_state_update((e, state) => {
         this.client_state = state;
       });
+      rs.on_notification((e, notification) => {
+        console.log(notification.text);
+      });
     },
   }
 </script>
@@ -46,6 +50,7 @@
     <Library v-else-if="current_panel == 'library'"></Library>
     <Queue v-else-if="current_panel == 'queue' && client_state.channel" :channel="client_state.channel"></Queue>
   </div>
+  <NotificationTray></NotificationTray>
   <Player v-if="client_state.channel" :channel="client_state.channel"></Player>
 </template>
 <style>

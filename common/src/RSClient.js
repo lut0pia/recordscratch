@@ -1,6 +1,7 @@
 import fs from 'fs/promises';
 import RSLibrary from "./RSLibrary.js";
 import RSWebSocket from "./RSWebSocket.js";
+import { text } from 'stream/consumers';
 
 const server_addresses = [
   'ws://127.0.0.1:18535',
@@ -27,6 +28,15 @@ export default class RSClient {
 
   async on_connection() {
     await this.update_server_time_offset();
+  }
+
+  on_disconnection() {
+    if(this.emit_notification) {
+      this.user_log({
+        type: 'error',
+        text: `Disconnected from server!`,
+      });
+    }
   }
 
   on_message(msg) {
@@ -68,7 +78,10 @@ export default class RSClient {
     if(track_download.status == 'success') {
       return track_download.track_buffer;
     } else {
-      console.error(`Could not find track ${track_hash}: ${track_download.text}`);
+      this.user_log({
+        type: 'error',
+        text: `Could not find track ${track_hash}: ${track_download.text}`,
+      });
       return null;
     }
   }
@@ -84,10 +97,22 @@ export default class RSClient {
   }
 
   async join_channel(channel_name) {
-    return await this.request({
+    const result = await this.request({
       type: 'channel_join',
       channel_name: channel_name,
     });
+    if(result.status == 'success') {
+      this.user_log({
+        type: 'log',
+        text: `Joined channel #${channel_name}`,
+      });
+    } else {
+      this.user_log({
+        type: 'error',
+        text: `Failed to join channel #${channel_name}: ${result.text}`
+      })
+    }
+    return result;
   }
 
   async queue_track(track) {
@@ -105,7 +130,10 @@ export default class RSClient {
       });
 
       if(upload_response.status == 'error') {
-        console.error(`Could not upload track: ${upload_response.text}`);
+        this.user_log({
+          type: 'error',
+          text: `Could not upload track: ${upload_response.text}`,
+        });
         return;
       }
     }
@@ -117,9 +145,15 @@ export default class RSClient {
     });
 
     if(queue_response.status == 'error') {
-      console.error(`Could not queue track: ${queue_response.text}`);
+      this.user_log({
+        type: 'error',
+        text: `Could not queue track: ${queue_response.text}`,
+      });
     } else {
-      console.log(`Queued track: ${track.hash}`)
+      this.user_log({
+        type: 'log',
+        text: `Queued track: ${track.artist} - ${track.title}`,
+      });
     }
   }
 
@@ -127,6 +161,11 @@ export default class RSClient {
     this.emit_state_update({
       channel: this.channel_state,
     });
+  }
+  
+  user_log(log) {
+    console.log(log.text);
+    this.emit_notification(log)
   }
 
   static get_ipc_message_in_types(is_dev) {
