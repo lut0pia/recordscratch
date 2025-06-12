@@ -20,6 +20,11 @@ export default class RSChannel {
     this.connections.delete(conn);
     delete conn.channel;
     this.queue = this.queue.filter(p => p.start_time < Date.now() || p.conn != conn);
+    this.update_queue();
+  }
+
+  update_queue() {
+    this.enforce_queue_ordering();
     this.compute_queue_timings();
     this.broadcast_state();
   }
@@ -61,8 +66,7 @@ export default class RSChannel {
       track: track,
     };
     this.queue.push(post);
-    this.compute_queue_timings();
-    this.broadcast_state();
+    this.update_queue();
     console.log(`#${this.name}: Queued track ${track.artist} - ${track.title} (${track.hash.substring(0, 8)})`);
     return post;
   }
@@ -70,9 +74,47 @@ export default class RSChannel {
   cancel_post(post) {
     const index = this.queue.indexOf(post);
     this.queue.splice(index, 1);
-    this.compute_queue_timings();
-    this.broadcast_state();
+    this.update_queue();
     console.log(`#${this.name}: Cancelled post ${post.track.artist} - ${post.track.title} (${post.track.hash.substring(0, 8)})`);
+  }
+
+  enforce_queue_ordering() {
+    const past_index = this.queue.findIndex(p => p.start_time && p.start_time < Date.now()) + 1;
+    const past_queue = this.queue.slice(0, past_index);
+    const future_queue = this.queue.slice(past_index);
+    
+    const per_user = {};
+    const get_per_user = c => {
+      if(!per_user[c.id]) {
+        per_user[c.id] = {
+          conn: c,
+          air_time: 0,
+          queue: [],
+        };
+      }
+      return per_user[c.id];
+    }
+    for(let p of past_queue) {
+      get_per_user(p.conn).air_time += p.track.duration;
+    }
+    for(let p of future_queue) {
+      get_per_user(p.conn).queue.push(p);
+    }
+
+    const new_future_queue = [];
+    while(true) {
+      // Find the user with min air time that still has posts left
+      const next_user = Object.values(per_user).reduce(
+        (p, c) => c.queue.length > 0 && (!p || p.air_time > c.air_time) ? c : p, null);
+      if(!next_user) {
+        break;
+      }
+      const next_post = next_user.queue.shift();
+      next_user.air_time += next_post.track.duration;
+      new_future_queue.push(next_post);
+    }
+
+    this.queue = past_queue.concat(new_future_queue);
   }
 
   compute_queue_timings() {
