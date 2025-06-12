@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
+import os from 'os';
 import RSLibrary from "./RSLibrary.js";
 import RSWebSocket from "./RSWebSocket.js";
-import { text } from 'stream/consumers';
 
 const server_addresses = [
   'ws://127.0.0.1:18535',
@@ -94,6 +94,39 @@ export default class RSClient {
 
   get_tracks() {
     return this.lib.tracks;
+  }
+
+  async save_track(track) {
+    let track_buffer;
+    const lib_track = this.lib.tracks_by_hash[track.hash];
+    if(lib_track && lib_track.buffer) {
+      track_buffer = lib_track.buffer;
+    }
+    if(!track_buffer) {
+      const track_download = await this.request({
+        type: 'track_download',
+        track_hash: track.hash,
+      });
+
+      if(track_download.status == 'success') {
+        track_buffer = track_download.track.buffer;
+      }
+    }
+    if(!track || !track_buffer) {
+      this.user_log({
+        type: 'error',
+        text: `Could not save track: ${track.artist} - ${track.title}`,
+      });
+      return;
+    }
+    const dir_path = `${os.homedir()}/Music/RecordScratch/${track.artist}/${track.album}`;
+    await fs.mkdir(dir_path, {recursive: true});
+    const file_path = `${dir_path}/${track.title}${track.ext}`;
+    await fs.writeFile(file_path, track_buffer);
+    this.user_log({
+      type: 'log',
+      text: `Saved track: ${track.artist} - ${track.title}`,
+    });
   }
 
   async get_channels() {
@@ -200,6 +233,7 @@ export default class RSClient {
       'get_channels',
       'get_track_buffer',
       'get_tracks',
+      'save_track',
       'join_channel',
       'queue_post',
       'cancel_post',

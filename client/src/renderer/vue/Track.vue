@@ -17,8 +17,17 @@
       can_cancel() {
         return this.post && this.post.user_id == this.state.user.id && this.post.start_time > this.now;
       },
+      can_save() {
+        return true; !this.track.file_path;
+      },
     },
     methods: {
+      save() {
+        rs.save_track(toRaw(this.track))
+      },
+      preview() {
+        rs.preview_track(toRaw(this.track));
+      },
       queue() {
         rs.queue_post(toRaw(this.track));
       },
@@ -42,8 +51,7 @@
     <div class="right">
       <div class="duration">{{ pretty_duration }}</div>
       <div class="actions">
-        <span>⭐</span>
-        <span>🎧</span>
+        <span v-if="can_save" @click="save">💾</span>
         <span @click="queue">▶</span>
         <span v-if="can_cancel" @click="cancel">❌</span>
       </div>
