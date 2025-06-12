@@ -41,6 +41,11 @@ export default class RSChannel {
   }
 
   to_client_data() {
+    const no_buffer_track = track => {
+      const nb_track = Object.assign({}, track);
+      delete nb_track.buffer;
+      return nb_track;
+    };
     return {
       name: this.name,
       user_count: this.connections.size,
@@ -48,12 +53,7 @@ export default class RSChannel {
         id: p.id,
         user_id: p.conn.id,
         start_time: p.start_time,
-        track: {
-          title: p.track.title,
-          artist: p.track.artist,
-          duration: p.track.duration,
-          hash: p.track.hash,
-        },
+        track: no_buffer_track(p.track),
       })),
     };
   }
@@ -90,7 +90,7 @@ export default class RSChannel {
     const past_index = this.queue.findIndex(p => !p.start_time || p.start_time > Date.now());
     const past_queue = this.queue.slice(0, past_index);
     const future_queue = this.queue.slice(past_index);
-    
+
     const per_user = {};
     const get_per_user = c => {
       if(!per_user[c.id]) {
