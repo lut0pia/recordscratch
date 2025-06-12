@@ -24,6 +24,7 @@ export default class RSChannel {
   }
 
   update_queue() {
+    this.remove_old_posts();
     this.enforce_queue_ordering();
     this.compute_queue_timings();
     this.broadcast_state();
@@ -76,6 +77,11 @@ export default class RSChannel {
     this.queue.splice(index, 1);
     this.update_queue();
     console.log(`#${this.name}: Cancelled post ${post.track.artist} - ${post.track.title} (${post.track.hash.substring(0, 8)})`);
+  }
+
+  remove_old_posts() {
+    const cutoff_time = Date.now() - 30*60*1000; // Half an hour ago
+    this.queue = this.queue.filter(p => !p.start_time || p.start_time + p.track.duration*1000 > cutoff_time);
   }
 
   enforce_queue_ordering() {
