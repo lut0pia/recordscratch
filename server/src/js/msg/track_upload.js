@@ -4,6 +4,7 @@ export default {
   name: 'track_upload',
   fields: {
     track_buffer: true,
+    track_ext: true,
   },
   on_message: async (server, conn, msg) => {
     const track_hash = RSTrack.get_hash_from_buffer(msg.track_buffer);
@@ -16,7 +17,7 @@ export default {
       return;
     }
 
-    track = await RSTrack.from_buffer(msg.track_buffer);
+    track = await RSTrack.from_buffer(msg.track_buffer, msg.track_ext);
     track.buffer = msg.track_buffer;
     server.tracks[track_hash] = track;
     console.log(`Added track: ${track.artist} - ${track.title} (${track_hash.substring(0, 8)})`);
