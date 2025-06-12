@@ -87,7 +87,7 @@ export default class RSChannel {
   }
 
   enforce_queue_ordering() {
-    const past_index = this.queue.findIndex(p => p.start_time && p.start_time < Date.now()) + 1;
+    const past_index = this.queue.findIndex(p => !p.start_time || p.start_time > Date.now());
     const past_queue = this.queue.slice(0, past_index);
     const future_queue = this.queue.slice(past_index);
     
