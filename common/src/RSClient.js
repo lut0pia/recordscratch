@@ -66,23 +66,27 @@ export default class RSClient {
     return Date.now() + this.server_diff_offset;
   }
 
-  async get_track_buffer(track_hash) {
-    const lib_track = this.lib.tracks_by_hash[track_hash];
+  async get_track_buffer(track) {
+    const lib_track = this.lib.tracks_by_hash[track.hash];
     if(lib_track) {
-      return await fs.readFile(lib_track.file_path);
+      if(lib_track.buffer) {
+        return lib_track.buffer;
+      } else {
+        return await fs.readFile(lib_track.file_path);
+      }
     }
 
     const track_download = await this.request({
       type: 'track_download',
-      track_hash: track_hash,
+      track_hash: track.hash,
     });
 
     if(track_download.status == 'success') {
-      return track_download.track_buffer;
+      return track_download.track.buffer;
     } else {
       this.user_log({
         type: 'error',
-        text: `Could not find track ${track_hash}: ${track_download.text}`,
+        text: `Could not find track ${track.hash}: ${track_download.text}`,
       });
       return null;
     }

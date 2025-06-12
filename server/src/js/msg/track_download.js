@@ -8,7 +8,7 @@ export default {
     if(track) {
       await msg.reply({
         status: 'success',
-        track_buffer: track.buffer,
+        track: Object.assign({}, track),
       });
     } else {
       await msg.reply({

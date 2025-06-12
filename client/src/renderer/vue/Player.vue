@@ -1,4 +1,5 @@
 <script>
+  import { toRaw } from 'vue';
   export default {
     props: [
       'state',
@@ -33,17 +34,17 @@
         this.now = await rs.get_server_time();
 
         if(this.current_post && this.current_post.track) {
-          const track_hash = this.current_post.track.hash;
-          if(!this.track_srcs[track_hash]) {
-            const buffer = await rs.get_track_buffer(track_hash);
+          const track = this.current_post.track;
+          if(!this.track_srcs[track.hash]) {
+            const buffer = await rs.get_track_buffer(toRaw(track));
             if(buffer) {
               const url = await URL.createObjectURL(new Blob([buffer]));
-              this.track_srcs[track_hash] = url;
+              this.track_srcs[track.hash] = url;
             }
           }
           const audio = document.getElementById('audio');
-          if(audio.src != this.track_srcs[track_hash]) {
-            audio.src = this.track_srcs[track_hash]
+          if(audio.src != this.track_srcs[track.hash]) {
+            audio.src = this.track_srcs[track.hash]
           }
           const wanted_current_time = (this.now - this.current_post.start_time) / 1000;
           if(Math.abs(audio.currentTime - wanted_current_time) > 1) {
