@@ -14,6 +14,7 @@ export default class RSChannel {
     this.connections.add(conn);
     conn.channel = this;
     this.broadcast_state();
+    console.log(`#${this.name}: ${conn.id} joined`);
   }
 
   leave(conn) {
@@ -21,6 +22,7 @@ export default class RSChannel {
     delete conn.channel;
     this.queue = this.queue.filter(p => p.start_time < Date.now() || p.conn != conn);
     this.update_queue();
+    console.log(`#${this.name}: ${conn.id} left`);
   }
 
   update_queue() {
