@@ -121,7 +121,8 @@ export default class RSClient {
     }
     const dir_path = `${os.homedir()}/Music/RecordScratch/${track.artist}/${track.album}`;
     await fs.mkdir(dir_path, {recursive: true});
-    const file_path = `${dir_path}/${track.title}${track.ext}`;
+    const ext = track.filename.slice(track.filename.lastIndexOf("."));
+    const file_path = `${dir_path}/${track.title}${ext}`;
     await fs.writeFile(file_path, track_buffer);
     this.user_log({
       type: 'log',
