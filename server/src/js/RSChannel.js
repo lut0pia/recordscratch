@@ -7,6 +7,11 @@ export default class RSChannel {
     console.log(`#${this.name}: Created`);
   }
 
+  deconstructor() {
+    delete this.server.channels[this.name];
+    console.log(`#${this.name}: Removed`);
+  }
+
   join(conn) {
     if(conn.channel) {
       conn.channel.leave(conn);
@@ -23,6 +28,10 @@ export default class RSChannel {
     this.queue = this.queue.filter(p => p.start_time < Date.now() || p.conn != conn);
     this.update_queue();
     console.log(`#${this.name}: ${conn.id} left`);
+
+    if(this.connections.size == 0) {
+      this.deconstructor(); // Remove empty channels
+    }
   }
 
   update_queue() {
