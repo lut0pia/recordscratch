@@ -13,7 +13,7 @@ export default class RSWebSocketMessage {
           raw_buffers.push(raw_buffer);
           obj[key] = `RAW_BUFFER_${raw_buffer_index}_${raw_buffer.byteLength}`;
           buffer_size += raw_buffer.byteLength;
-        } else if(Object.prototype == Object.getPrototypeOf(obj[key])) {
+        } else if(obj[key] && Object.prototype == Object.getPrototypeOf(obj[key])) {
           mark_buffers(obj[key]);
         }
       }
