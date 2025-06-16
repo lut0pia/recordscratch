@@ -18,7 +18,7 @@
         return this.post && this.post.user_id == this.state.user.id && this.post.start_time > this.now;
       },
       can_save() {
-        return true; !this.track.file_path;
+        return !this.track.file_path;
       },
     },
     methods: {
