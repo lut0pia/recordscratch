@@ -71,6 +71,10 @@ export default class RSChannel {
     return this.queue.find(post => post.id == post_id);
   }
 
+  get_used_track_hashes() {
+    return new Set(this.queue.map(p => p.track.hash));
+  }
+
   queue_post(conn, track) {
     const post = {
       id: this.server.get_next_id(),

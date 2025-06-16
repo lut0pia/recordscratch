@@ -36,6 +36,7 @@ export default class RSServer {
     this.channels = {};
     this.connections = new Set();
     this.next_id = 0;
+    setInterval(() => this.prune_tracks(), 60000);
   }
 
   on_connection(conn, request) {
@@ -87,5 +88,20 @@ export default class RSServer {
 
   get_next_id() {
     return this.next_id++;
+  }
+
+  // Removes all tracks no longer referenced in channels
+  prune_tracks() {
+    let used_track_hashes = new Set();
+    for(let channel of Object.values(this.channels)) {
+      used_track_hashes = used_track_hashes.union(channel.get_used_track_hashes());
+    }
+
+    for(let track of Object.values(this.tracks)) {
+      if(!used_track_hashes.has(track.hash)) {
+        delete this.tracks[track.hash];
+        console.log(`Removed track: ${track.artist} - ${track.title} (${track.hash.substring(0, 8)})`);
+      }
+    }
   }
 };
