@@ -47,6 +47,7 @@ export default class RSLibrary {
       for(let path of this.scan_paths) {
         await this.scan_directory(path);
       }
+      await this.prune_library();
     }
   }
   async scan_directory(dir_path) {
@@ -73,6 +74,18 @@ export default class RSLibrary {
     }
   }
 
+  async prune_library() {
+    while(true) {
+      for(let track of this.tracks) {
+        try {
+          await fs.access(track.file_path);
+        } catch(e) {
+          this.remove_track(track);
+        }
+      }
+    }
+  }
+
   add_track(track) {
     if(this.tracks_by_path[track.file_path]) {
       return;
@@ -94,5 +107,14 @@ export default class RSLibrary {
     album.name = track.album;
     album.tracks.push(track);
     this.should_save = true;
+  }
+  remove_track(track) {
+    const track_index = this.tracks.findIndex(t => t == track);
+    if(track_index >= 0) {
+      this.tracks.splice(track_index, 1);
+      delete this.tracks_by_hash[track.hash];
+      delete this.tracks_by_path[track.file_path];
+      this.should_save = true;
+    }
   }
 };
