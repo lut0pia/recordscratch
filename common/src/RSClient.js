@@ -166,7 +166,7 @@ export default class RSClient {
       const upload_response = await this.request({
         type: 'track_upload',
         track_buffer: track_buffer,
-        track_ext: track.ext,
+        track_filename: track.filename,
       });
 
       if(upload_response.status == 'error') {
