@@ -92,9 +92,11 @@ export default class RSServer {
 
   // Removes all tracks no longer referenced in channels
   prune_tracks() {
-    let used_track_hashes = new Set();
+    const used_track_hashes = new Set();
     for(let channel of Object.values(this.channels)) {
-      used_track_hashes = used_track_hashes.union(channel.get_used_track_hashes());
+      for(let track_hash of channel.get_used_track_hashes()) {
+        used_track_hashes.add(track_hash);
+      }
     }
 
     for(let track of Object.values(this.tracks)) {
