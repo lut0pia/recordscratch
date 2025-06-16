@@ -75,13 +75,11 @@ export default class RSLibrary {
   }
 
   async prune_library() {
-    while(true) {
-      for(let track of this.tracks) {
-        try {
-          await fs.access(track.file_path);
-        } catch(e) {
-          this.remove_track(track);
-        }
+    for(let track of this.tracks) {
+      try {
+        await fs.access(track.file_path);
+      } catch(e) {
+        this.remove_track(track);
       }
     }
   }
