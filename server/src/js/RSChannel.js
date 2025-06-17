@@ -1,4 +1,5 @@
 export default class RSChannel {
+  static name_regex = /^(\w+)(:\w+)?$/;
   constructor(server, name) {
     this.server = server;
     this.name = name;
@@ -10,6 +11,10 @@ export default class RSChannel {
   deconstructor() {
     delete this.server.channels[this.name];
     console.log(`#${this.name}: Removed`);
+  }
+
+  is_public() {
+    return !this.name.includes(':');
   }
 
   join(conn) {
