@@ -10,9 +10,6 @@ import track_download from './msg/track_download.js';
 import track_get from './msg/track_get.js';
 import track_upload from './msg/track_upload.js'
 import user_get from './msg/user_get.js';
-import user_sign_in from './msg/user_sign_in.js';
-import user_sign_out from './msg/user_sign_out.js';
-import user_sign_up from './msg/user_sign_up.js';
 
 const msg_types = [
   channel_join,
@@ -25,9 +22,6 @@ const msg_types = [
   track_get,
   track_upload,
   user_get,
-  user_sign_in,
-  user_sign_out,
-  user_sign_up,
 ];
 
 export default class RSServer {
