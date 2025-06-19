@@ -51,7 +51,7 @@
       <div class="duration">{{ pretty_duration }}</div>
       <div class="actions">
         <span v-if="can_save" @click="save">💾</span>
-        <span @click="queue">▶</span>
+        <span v-if="!post" @click="queue">▶</span>
         <span v-if="can_cancel" @click="cancel">❌</span>
       </div>
     </div>
