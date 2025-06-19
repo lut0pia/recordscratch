@@ -4,16 +4,20 @@
     props: ['state', 'track', 'post'],
     data() {
       return {
-        now: 0,
+        now: Date.now(),
         can_save: false,
       };
     },
     computed: {
       pretty_duration() {
-        const seconds_total = Math.floor(this.track.duration);
-        const minutes = Math.floor(seconds_total / 60);
-        const seconds = seconds_total % 60;
-        return `${minutes}:${seconds.toString().padStart(2,'0')}`;
+        const seconds_to_time = s => `${Math.floor(s/60)}:${(s%60).toString().padStart(2, '0')}`;
+        const duration = Math.floor(this.track.duration);
+        const is_current_post =this.post && this.post.start_time <= this.now && (this.post.start_time+this.track.duration*1000) > this.now;
+        if(is_current_post) {
+          const current_time = Math.floor((this.now - this.post.start_time) / 1000);
+          return `${seconds_to_time(current_time)} / ${seconds_to_time(duration)}`;
+        }
+        return seconds_to_time(duration);
       },
       can_cancel() {
         return this.post && this.post.user_id == this.state.user.id && this.post.start_time > this.now;
