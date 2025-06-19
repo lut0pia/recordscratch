@@ -39,9 +39,9 @@
 </script>
 <template>
   <div id="header">
-    <a title="Channels" @click="select_panel('channels')" v-bind:class="current_panel == 'channels' ? 'active' : ''">📻</a>
-    <a title="Library" @click="select_panel('library')" v-bind:class="current_panel == 'library' ? 'active' : ''">💿</a>
-    <a title="Queue" @click="select_panel('queue')" v-bind:class="current_panel == 'queue' ? 'active' : ''">☰</a>
+    <a title="Channels" @click="select_panel('channels')" :class="{active:current_panel == 'channels'}">📻</a>
+    <a title="Library" @click="select_panel('library')" :class="{active:current_panel == 'library'}">💿</a>
+    <a title="Queue" @click="select_panel('queue')" :class="{active:current_panel == 'queue'}">☰</a>
   </div>
   <div id="main">
     <Channels v-if="current_panel == 'channels'"/>
