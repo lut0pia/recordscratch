@@ -24,6 +24,9 @@
         }
         return "current";
       },
+      completeness_ratio() {
+        return (this.now - this.post.start_time) / (this.post.track.duration * 1000);
+      },
     },
     async mounted() {
       this.now = await rs.get_server_time();
@@ -37,16 +40,14 @@
   }
 </script>
 <template>
-  <div class="post" v-bind:class="post_class">
+  <div class="post" :class="post_class" 
+  :style="[post_class=='current' ?{background: `linear-gradient(90deg,lightgray ${completeness_ratio*100}%, transparent ${completeness_ratio*100}%)`} : {}]">
     <Track :state=state :track=post.track :post=post />
   </div>
 </template>
 <style>
   .post.past {
     opacity: 0.5;
-  }
-  .post.current {
-    background-color: lightgrey;
   }
   .post.obsolete {
     display: none;
