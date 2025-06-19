@@ -57,6 +57,5 @@
   #tracks {
     max-width: 512px;
     margin: auto;
-    padding-top: 48px;
   }
 </style>

@@ -23,15 +23,13 @@
 </template>
 <style>
   .header_text_input {
-    position: fixed;
-    height: 48px;
-    width: calc(100% - 18px);
+    width: 100%;
   }
   .header_text_input input {
     display: block;
-    width: calc(min(512px, 100% - 18px));
+    width: calc(min(512px, 100% - 32px));
     height: 28px;
-    margin: auto;
+    margin: 12px auto;
     padding: 2px 8px;
   }
 </style>

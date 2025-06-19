@@ -63,7 +63,6 @@
   #channels {
     max-width: 512px;
     margin: auto;
-    padding-top: 48px;
   }
   #channel_input {
     margin: auto;
