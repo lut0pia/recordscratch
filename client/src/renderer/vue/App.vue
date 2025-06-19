@@ -43,6 +43,7 @@
     <a title="Channels" @click="select_panel('channels')" :class="{active:current_panel == 'channels'}">📻</a>
     <a title="Library" @click="select_panel('library')" :class="{active:current_panel == 'library'}">💿</a>
     <a v-if="is_mobile" title="Queue" @click="select_panel('queue')" :class="{active:current_panel == 'queue'}">☰</a>
+    <span v-if="state.channel" id="channel_name">#{{state.channel.name}} (🧍{{ state.channel.user_count }})</span>
   </div>
   <div id="content">
     <div id="main">
@@ -84,6 +85,14 @@
   }
   #header a.active {
     background-color: grey;
+  }
+  #channel_name {
+    float: right;
+    line-height: 40px;
+    margin: 8px 0px;
+    width: 30%;
+    min-width: 400px;
+    max-width: 512px;
   }
   #content {
     display: flex;
