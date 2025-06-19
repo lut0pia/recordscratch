@@ -1,6 +1,7 @@
 import fs from 'fs/promises';
 import os from 'os';
 import RSLibrary from "./RSLibrary.js";
+import RSUserRegistry from './RSUserRegistry.js';
 import RSWebSocket from "./RSWebSocket.js";
 
 const server_addresses = [
@@ -15,6 +16,7 @@ export default class RSClient {
     this.lib = new RSLibrary();
     this.lib.load_from_file();
     this.current_user = null;
+    this.users = new RSUserRegistry();
     this.server_diff_offset = 0;
     setInterval(async () => {
       this.update_server_time_offset();
@@ -41,12 +43,21 @@ export default class RSClient {
     }
   }
 
-  on_message(msg) {
+  async on_message(msg) {
     // Received a generic message not associated with a request
     switch(msg.type) {
       case 'channel_state':
         this.channel_state = msg.state;
+        for(let post of this.channel_state.queue) {
+          await this.conditional_fetch_user(post.user_id);
+        }
         this.update_ui_state();
+        break;
+      case 'user_property':
+        if(this.users.get_user(msg.user_id)) {
+          this.users.set_user_property(msg.user_id, msg.key, msg.value);
+          this.update_ui_state();
+        }
         break;
     }
   }
@@ -228,9 +239,22 @@ export default class RSClient {
     }
   }
 
+  async conditional_fetch_user(user_id) {
+    if(!this.users.get_user(user_id)) {
+      const result = await this.request({
+        type: 'user_get',
+        user_id: user_id,
+      });
+      if(result.status == 'success') {
+        this.users.create_user(user_id, result.user);
+      }
+    }
+  }
+
   update_ui_state() {
     this.emit_state_update({
       user: this.user,
+      users: this.users.users,
       channel: this.channel_state,
     });
   }
