@@ -1,4 +1,5 @@
 .vscode
 .library.json
+.settings.json
 config.json
 node_modules

@@ -5,11 +5,12 @@
   import Channels from './Channels.vue'
   import Library from './Library.vue'
   import Queue from './Queue.vue'
+  import Settings from './Settings.vue'
 
   export default {
     components: {
       NotificationTray, Player,
-      Channels, Library, Queue,
+      Channels, Library, Queue, Settings,
     },
     data() {
       return {
@@ -43,6 +44,7 @@
     <a title="Channels" @click="select_panel('channels')" :class="{active:current_panel == 'channels'}">📻</a>
     <a title="Library" @click="select_panel('library')" :class="{active:current_panel == 'library'}">💿</a>
     <a v-if="is_mobile" title="Queue" @click="select_panel('queue')" :class="{active:current_panel == 'queue'}">☰</a>
+    <a title="Settings" @click="select_panel('settings')" :class="{active:current_panel == 'settings'}">⚙</a>
     <span v-if="state.channel" id="channel_name">#{{state.channel.name}} (🧍{{ state.channel.user_count }})</span>
   </div>
   <div id="content">
@@ -50,6 +52,7 @@
       <Channels v-if="current_panel == 'channels'"/>
       <Library v-else-if="current_panel == 'library'"/>
       <Queue v-else-if="current_panel == 'queue'"/>
+      <Settings v-else-if="current_panel == 'settings'" :state=state />
     </div>
     <Queue v-if="!is_mobile && state.channel" :state=state />
   </div>

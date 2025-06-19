@@ -2,6 +2,7 @@ import RSClient from './RSClient.js'
 import RSLibrary from './RSLibrary.js'
 import RSTrack from './RSTrack.js'
 import RSUserRegistry from './RSUserRegistry.js'
+import RSUserSettings from './RSUserSettings.js'
 import RSWebSocketMessage from './RSWebSocketMessage.js'
 
 export {
@@ -9,5 +10,6 @@ export {
   RSLibrary,
   RSTrack,
   RSUserRegistry,
+  RSUserSettings,
   RSWebSocketMessage,
 }
