@@ -58,6 +58,7 @@
 <style>
   body {
     margin: 0px;
+    user-select: none;
   }
   #app {
     display: flex;
