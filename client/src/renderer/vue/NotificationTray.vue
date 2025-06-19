@@ -23,4 +23,8 @@
   </div>
 </template>
 <style>
+  #notification_tray {
+    position: absolute;
+    bottom: 0px;
+  }
 </style>

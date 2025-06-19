@@ -35,6 +35,8 @@
     border: 1px grey solid;
     border-radius: 5px;
     padding: 10px;
+    background-color: white;
+    margin: 10px;
   }
   .notification.highlight {
     display: block;
