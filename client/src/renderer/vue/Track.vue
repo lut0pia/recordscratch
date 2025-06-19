@@ -61,7 +61,7 @@
       this.interval = setInterval(async () => {
         this.now = await rs.get_server_time();
       }, 1000);
-      this.can_save = !this.track.file_path && !await rs.is_track_on_disk(this.track.hash);
+      this.can_save = !this.track.file_path && this.post.user_id != this.state.user.id && !await rs.is_track_on_disk(this.track.hash);
     },
     unmounted() {
       clearInterval(this.interval);
