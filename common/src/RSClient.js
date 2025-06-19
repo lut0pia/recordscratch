@@ -96,6 +96,11 @@ export default class RSClient {
     return this.lib.tracks;
   }
 
+  is_track_on_disk(track_hash) {
+    const track = this.lib.tracks_by_hash[track_hash];
+    return track && track.file_path;
+  }
+
   async save_track(track) {
     let track_buffer;
     const lib_track = this.lib.tracks_by_hash[track.hash];
@@ -241,6 +246,7 @@ export default class RSClient {
       'get_channels',
       'get_track_buffer',
       'get_tracks',
+      'is_track_on_disk',
       'save_track',
       'join_channel',
       'queue_post',

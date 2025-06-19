@@ -5,6 +5,7 @@
     data() {
       return {
         now: 0,
+        can_save: false,
       };
     },
     computed: {
@@ -16,9 +17,6 @@
       },
       can_cancel() {
         return this.post && this.post.user_id == this.state.user.id && this.post.start_time > this.now;
-      },
-      can_save() {
-        return !this.track.file_path;
       },
     },
     methods: {
@@ -40,6 +38,7 @@
       this.interval = setInterval(async () => {
         this.now = await rs.get_server_time();
       }, 1000);
+      this.can_save = !this.track.file_path && !await rs.is_track_on_disk(this.track.hash);
     },
     unmounted() {
       clearInterval(this.interval);
