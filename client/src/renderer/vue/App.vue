@@ -15,6 +15,7 @@
       return {
         current_panel: 'channels',
         state: {},
+        is_mobile: window.innerWidth < 1000,
       };
     },
     methods: {
@@ -41,12 +42,15 @@
   <div id="header">
     <a title="Channels" @click="select_panel('channels')" :class="{active:current_panel == 'channels'}">📻</a>
     <a title="Library" @click="select_panel('library')" :class="{active:current_panel == 'library'}">💿</a>
-    <a title="Queue" @click="select_panel('queue')" :class="{active:current_panel == 'queue'}">☰</a>
+    <a v-if="is_mobile" title="Queue" @click="select_panel('queue')" :class="{active:current_panel == 'queue'}">☰</a>
   </div>
-  <div id="main">
-    <Channels v-if="current_panel == 'channels'"/>
-    <Library v-else-if="current_panel == 'library'"/>
-    <Queue v-else-if="current_panel == 'queue' && state.channel" :state=state />
+  <div id="content">
+    <div id="main">
+      <Channels v-if="current_panel == 'channels'"/>
+      <Library v-else-if="current_panel == 'library'"/>
+      <Queue v-else-if="current_panel == 'queue'"/>
+    </div>
+    <Queue v-if="!is_mobile && state.channel" :state=state />
   </div>
   <NotificationTray/>
   <Player v-if="state.channel" :state=state />
@@ -79,6 +83,12 @@
   }
   #header a.active {
     background-color: grey;
+  }
+  #content {
+    display: flex;
+    overflow: hidden;
+    flex-direction: row;
+    height: 100%;
   }
   #main {
     overflow: hidden;
