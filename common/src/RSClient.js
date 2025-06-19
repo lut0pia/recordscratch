@@ -99,6 +99,13 @@ export default class RSClient {
   async save_track(track) {
     let track_buffer;
     const lib_track = this.lib.tracks_by_hash[track.hash];
+    if(lib_track && lib_track.file_path) {
+      this.user_log({
+        type: 'log',
+        text: `Track already in library: ${track.artist} - ${track.title}`,
+      });
+      return;
+    }
     if(lib_track && lib_track.buffer) {
       track_buffer = lib_track.buffer;
     }
