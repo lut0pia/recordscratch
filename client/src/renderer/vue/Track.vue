@@ -9,6 +9,18 @@
       };
     },
     computed: {
+      pretty_artist() {
+        let artist = this.track.artist;
+        while(artist.length > 20) {
+          if(artist.includes(',')) {
+            artist = artist.slice(0, artist.lastIndexOf(','));
+          } else {
+            break;
+          }
+        }
+
+        return artist.trim();
+      },
       pretty_duration() {
         const seconds_to_time = s => `${Math.floor(s/60)}:${(s%60).toString().padStart(2, '0')}`;
         const duration = Math.floor(this.track.duration);
@@ -21,6 +33,13 @@
       },
       can_cancel() {
         return this.post && this.post.user_id == this.state.user.id && this.post.start_time > this.now;
+      },
+      poster_name() {
+        const poster = this.state.users[this.post.user_id];
+        if(poster && poster.name) {
+          return poster.name;
+        }
+        return `#${this.post.user_id}`;
       },
     },
     methods: {
@@ -60,8 +79,9 @@
       </div>
     </div>
     <div class="left">
-      <div class="title">{{ track.title }}</div>
-      <div class="artist">{{ track.artist }}</div>
+      <span class="artist">{{ pretty_artist }} - </span>
+      <span class="title">{{ track.title }}</span>
+      <div v-if="post" class="poster">👤{{ poster_name }}</div>
     </div>
    </div>
 </template>
@@ -69,6 +89,16 @@
   .track {
     padding: 4px 4px;
     border-bottom: 1px solid black;
+  }
+  .track .left {
+    min-height: 32px;
+    width: 80%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-wrap: nowrap;
+  }
+  :not(.post) > .track .left {
+    line-height: 32px;
   }
   .track .right {
     float: right;
