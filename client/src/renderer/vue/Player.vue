@@ -63,17 +63,7 @@
   }
 </script>
 <template>
-  <div v-if="current_post != null" id="player">
-    <div class="title">{{current_post.track.title}}</div>
-    <div class="artist">{{current_post.track.artist}}</div>
-    <div class="duration">{{time_display}}</div>
-  </div>
   <audio id="audio"></audio>
 </template>
 <style>
-  #player {
-    flex: none;
-    height: 64px;
-    background-color: aliceblue;
-  }
 </style>
