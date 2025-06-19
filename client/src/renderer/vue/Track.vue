@@ -39,7 +39,7 @@
         if(poster && poster.name) {
           return poster.name;
         }
-        return `#${this.post.user_id}`;
+        return `Anon#${this.post.user_id}`;
       },
     },
     methods: {
@@ -79,9 +79,9 @@
       </div>
     </div>
     <div class="left">
+      <div v-if="post" class="poster">{{ poster_name }}</div>
       <span class="artist">{{ pretty_artist }} - </span>
       <span class="title">{{ track.title }}</span>
-      <div v-if="post" class="poster">👤{{ poster_name }}</div>
     </div>
    </div>
 </template>
@@ -103,6 +103,9 @@
   .track .right {
     float: right;
     text-align: right;
+  }
+  .track .poster {
+    font-weight: bold;
   }
   .track .artist {
     display: inline;
