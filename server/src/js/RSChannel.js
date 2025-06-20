@@ -47,10 +47,13 @@ export default class RSChannel {
   }
 
   broadcast_state() {
-    const msg = {
+    this.broadcast({
       type: 'channel_state',
       state: this.to_client_data(),
-    };
+    });
+  }
+
+  broadcast(msg) {
     this.connections.forEach(conn => conn.send_msg(msg));
   }
 

@@ -4,6 +4,7 @@ import RSChannel from './RSChannel.js';
 import channel_join from './msg/channel_join.js';
 import channel_leave from './msg/channel_leave.js';
 import channel_list from './msg/channel_list.js';
+import channel_message from './msg/channel_message.js';
 import post_cancel from './msg/post_cancel.js';
 import post_queue from './msg/post_queue.js';
 import time_get from './msg/time_get.js';
@@ -17,6 +18,7 @@ const msg_types = [
   channel_join,
   channel_leave,
   channel_list,
+  channel_message,
   post_cancel,
   post_queue,
   time_get,
