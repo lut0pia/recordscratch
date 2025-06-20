@@ -18,6 +18,7 @@ export default class RSClient {
     this.current_user = null;
     this.users = new RSUserRegistry();
     this.server_diff_offset = 0;
+    this.chat = [];
     setInterval(async () => {
       this.update_server_time_offset();
       this.lib.save_to_file();
@@ -47,10 +48,22 @@ export default class RSClient {
     // Received a generic message not associated with a request
     switch(msg.type) {
       case 'channel_state':
+        const previous_state = this.channel_state;
         this.channel_state = msg.state;
+        if(previous_state && previous_state.name != this.channel_state.name) {
+          this.chat = []; // We changed channel, wipe chat history
+        }
         for(let post of this.channel_state.queue) {
           await this.conditional_fetch_user(post.user_id);
         }
+        this.update_ui_state();
+        break;
+      case 'channel_message':
+        await this.conditional_fetch_user(msg.user_id);
+        this.chat.push({
+          user_id: msg.user_id,
+          message: msg.message,
+        });
         this.update_ui_state();
         break;
       case 'user_property':
@@ -178,6 +191,19 @@ export default class RSClient {
     return result;
   }
 
+  async message_channel(message) {
+    const result = await this.request({
+      type: 'channel_message',
+      message: message,
+    });
+    if(result.status == 'error') {
+      this.user_log({
+        type: 'error',
+        text: `Failed to send message: ${result.text}`
+      });
+    }
+  }
+
   async queue_post(track) {
     const server_track = await this.request({
       type: 'track_get',
@@ -256,6 +282,7 @@ export default class RSClient {
       user: this.user,
       users: this.users.users,
       channel: this.channel_state,
+      chat: this.chat,
     });
   }
   
@@ -273,6 +300,7 @@ export default class RSClient {
       'is_track_on_disk',
       'save_track',
       'join_channel',
+      'message_channel',
       'queue_post',
       'cancel_post',
     ];
