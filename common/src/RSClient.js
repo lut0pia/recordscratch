@@ -273,6 +273,9 @@ export default class RSClient {
       });
       if(result.status == 'success') {
         this.users.create_user(user_id, result.user);
+      } else {
+        // The user does not exist, create an empty user and forget about it
+        this.users.create_user(user_id, {});
       }
     }
   }
