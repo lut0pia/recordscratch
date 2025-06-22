@@ -60,16 +60,16 @@ export default class RSLibrary {
 
     for(let file of files) {
       const file_path = `${dir_path}/${file}`;
-      const file_stat = await fs.stat(file_path);
-      if(file_stat.isDirectory()) {
-        await this.scan_directory(file_path);
-      } else if(file.match(/\.(mp3|m4a|ogg|flac)$/i) && !this.tracks_by_path[file_path]) {
-        try {
+      try {
+        const file_stat = await fs.stat(file_path);
+        if(file_stat.isDirectory()) {
+          await this.scan_directory(file_path);
+        } else if(file.match(/\.(mp3|m4a|ogg|flac)$/i) && !this.tracks_by_path[file_path]) {
           const track = await RSTrack.from_file_path(file_path);
           this.add_track(track);
-        } catch(e) {
-          console.log(`Error reading audio file ${file_path}: ${e}`);
         }
+      } catch(e) {
+        console.log(`Error reading path ${file_path}: ${e}`);
       }
     }
   }
