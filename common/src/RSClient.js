@@ -3,6 +3,7 @@ import os from 'os';
 import RSLibrary from "./RSLibrary.js";
 import RSUserRegistry from './RSUserRegistry.js';
 import RSWebSocket from "./RSWebSocket.js";
+import RSUserSettings from './RSUserSettings.js';
 
 const server_addresses = [
   'ws://127.0.0.1:18535',
@@ -12,10 +13,11 @@ const server_addresses = [
 
 export default class RSClient {
   constructor() {
+    this.settings = new RSUserSettings();
+    this.settings.load_from_file();
     this.ws = new RSWebSocket(this, server_addresses);
     this.lib = new RSLibrary();
     this.lib.load_from_file();
-    this.current_user = null;
     this.users = new RSUserRegistry();
     this.server_diff_offset = 0;
     this.chat = [];
@@ -33,6 +35,7 @@ export default class RSClient {
     const user_response = await this.ws.request({type: 'user_get'});
     this.user = user_response.user;
     await this.update_server_time_offset();
+    await this.upload_user_properties();
   }
 
   on_disconnection() {
@@ -84,6 +87,21 @@ export default class RSClient {
     const one_way_time = round_trip_time / 2;
     this.server_diff_offset = (server_time.time + one_way_time) - Date.now();
     console.log(`Server time offset: ${this.server_diff_offset}ms (ping: ${round_trip_time}ms)`);
+  }
+
+  async upload_user_properties() {
+    for(let setting of Object.entries(RSUserSettings.descriptions)) {
+      const key = setting[0];
+      const value = this.settings.get_value(key);
+      if(value && setting[1].shared) {
+        await this.request({
+          type:'user_set_property',
+          key: key,
+          value: value,
+        });
+      }
+    }
+    console.log('Uploaded user properties');
   }
 
   get_server_time() {
@@ -265,6 +283,38 @@ export default class RSClient {
     }
   }
 
+  async set_setting(key, value) {
+    const setting_desc = RSUserSettings.descriptions[key];
+    if(!setting_desc) {
+      return this.user_log({
+        type: 'error',
+        text: `Unknown setting name: ${key}`,
+      });
+    }
+    if(setting_desc.regexp && !value.match(setting_desc.regexp)) {
+      return this.user_log({
+        type: 'error',
+        text: `Invalid value for setting: ${key}`,
+      });
+    }
+    this.settings.set_value(key, value);
+    if(setting_desc.shared) {
+      const result = await this.request({
+        type:'user_set_property',
+        key: key,
+        value: value,
+      });
+    }
+  }
+
+  get_setting_values() {
+    return this.settings.values;
+  }
+
+  get_setting_descriptions() {
+    return RSUserSettings.descriptions;
+  }
+
   async conditional_fetch_user(user_id) {
     if(!this.users.get_user(user_id)) {
       const result = await this.request({
@@ -288,7 +338,7 @@ export default class RSClient {
       chat: this.chat,
     });
   }
-  
+
   user_log(log) {
     console.log(log.text);
     this.emit_notification(log)
@@ -306,6 +356,10 @@ export default class RSClient {
       'message_channel',
       'queue_post',
       'cancel_post',
+
+      'set_setting',
+      'get_setting_values',
+      'get_setting_descriptions',
     ];
     if(is_dev) {
       message_types.push('request');
