@@ -1,7 +1,7 @@
 export default class RSUserRegistry {
   static user_properties = {
-    'name': s => s.match(/^\w{1,24}$/),
-    'pronouns': s => s.match(/^[\w\/]{1,16}$/),
+    'name': s => s.match(/^\w{0,24}$/),
+    'pronouns': s => s.match(/^[\w\/]{0,16}$/),
   };
   constructor() {
     this.users = {};
