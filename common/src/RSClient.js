@@ -298,6 +298,7 @@ export default class RSClient {
       });
     }
     this.settings.set_value(key, value);
+    this.update_ui_state();
     if(setting_desc.shared) {
       const result = await this.request({
         type:'user_set_property',
@@ -305,10 +306,6 @@ export default class RSClient {
         value: value,
       });
     }
-  }
-
-  get_setting_values() {
-    return this.settings.values;
   }
 
   get_setting_descriptions() {
@@ -340,6 +337,7 @@ export default class RSClient {
       users: this.users.users,
       channel: this.channel_state,
       chat: this.chat,
+      settings: this.settings.values,
     });
   }
 
@@ -364,7 +362,6 @@ export default class RSClient {
       'cancel_post',
 
       'set_setting',
-      'get_setting_values',
       'get_setting_descriptions',
     ];
     if(is_dev) {
