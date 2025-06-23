@@ -11,6 +11,7 @@
     data() {
       return {
         message_input: '',
+        last_message_count: 0,
       };
     },
     methods: {
@@ -18,15 +19,36 @@
         if(this.message_input) {
           await rs.message_channel(this.message_input);
           this.message_input = '';
+          this.scroll_down();
+        }
+      },
+      scroll_down() {
+        const messages_el = this.$refs.messages;
+        const last_el = messages_el.lastElementChild;
+        if(last_el) {
+          last_el.scrollIntoView({
+            behavior: 'smooth',
+          });
         }
       },
     },
+    updated() {
+      if(this.last_message_count != this.state.chat.length) {
+        const messages_el = this.$refs.messages;
+        const main_el = messages_el.parentNode.parentNode;
+        const last_el = messages_el.lastElementChild;
+        if(main_el.scrollTop > main_el.scrollHeight - main_el.offsetHeight - last_el.offsetHeight - 5) {
+          this.scroll_down();
+        }
+      }
+      this.last_message_count = this.state.chat.length;
+    }
   }
 </script>
 
 <template>
   <div id="chat">
-    <div id="messages">
+    <div id="messages" ref="messages">
       <Message v-for="message in state.chat" :state=state :message=message />
       <div v-if="state.chat.length == 0">No messages yet</div>
     </div>
