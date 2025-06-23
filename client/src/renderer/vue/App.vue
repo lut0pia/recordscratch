@@ -111,5 +111,6 @@
     overflow: hidden;
     overflow-y: scroll;
     flex: 1 1 auto;
+    padding: 10px;
   }
 </style>

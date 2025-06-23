@@ -48,15 +48,15 @@
     display: inline-block;
     font-weight: bold;
     text-transform: capitalize;
-    padding: 10px 0px;
+    margin-bottom: 10px;
   }
   .setting input {
-    width: 300px;
+    width: calc(70% - 10px);
     height: 20px;
   }
   .setting label {
     display: inline-block;
-    width: 150px;
+    width: calc(30% - 20px);
     padding: 10px;
     text-transform: capitalize;
   }
