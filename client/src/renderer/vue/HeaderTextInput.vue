@@ -17,7 +17,7 @@
       type="text"
       :placeholder="placeholder"
       @input="$emit('update:modelValue', $event.target.value)"
-      @keypress="$event.key == 'Enter' && $emit('submit')"
+      @keypress.enter="$emit('submit')"
     />
   </div>
 </template>
