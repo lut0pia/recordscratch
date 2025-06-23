@@ -4,11 +4,13 @@ export default class RSUserSettings {
   static descriptions = {
     name: {
       category: 'identity',
+      type: 'text',
       shared: true,
       regexp: /^\w{1,24}$/,
     },
     pronouns: {
       category: 'identity',
+      type: 'text',
       shared: true,
       regexp: /^[\w\/]{1,16}$/,
     },

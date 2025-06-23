@@ -18,6 +18,12 @@
         }
         category[desc[0]] = desc[1];
       }
+      this.categories['Library'] = {
+        'Clear': {
+          type: 'action',
+          run: () => rs.clear_library(),
+        }
+      };
     },
     methods: {
       set_setting(key, value) {
@@ -30,11 +36,16 @@
   <div id="settings">
     <div class="category" v-for="(settings, cat_name) in this.categories">
       <title>{{ cat_name }}</title>
-      <div class="setting" v-for="(desc, setting_name) in settings">
-        <label>{{setting_name}} </label>
-        <input type="text"
-          @keypress.enter="set_setting(setting_name, $event.target.value)"
-          :value="state.settings[setting_name]" />
+      <div class="setting" v-for="(desc, setting_name) in settings" >
+        <div v-if="desc.type == 'text'">
+          <label>{{setting_name}} </label>
+          <input type="text"
+            @keypress.enter="set_setting(setting_name, $event.target.value)"
+            :value="state.settings[setting_name]" />
+        </div>
+        <div v-else-if="desc.type == 'action'">
+          <button @click="desc.run()">{{ setting_name }}</button>
+        </div>
       </div>
     </div>
   </div>

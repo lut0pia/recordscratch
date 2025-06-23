@@ -106,6 +106,7 @@ export default class RSLibrary {
     album.tracks.push(track);
     this.should_save = true;
   }
+
   remove_track(track) {
     const track_index = this.tracks.findIndex(t => t == track);
     if(track_index >= 0) {
@@ -113,6 +114,12 @@ export default class RSLibrary {
       delete this.tracks_by_hash[track.hash];
       delete this.tracks_by_path[track.file_path];
       this.should_save = true;
+    }
+  }
+
+  clear() {
+    while(this.tracks.length) {
+      this.remove_track(this.tracks[0]);
     }
   }
 };

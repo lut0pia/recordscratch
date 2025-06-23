@@ -184,6 +184,10 @@ export default class RSClient {
     });
   }
 
+  clear_library() {
+    this.lib.clear();
+  }
+
   async get_channels() {
     return (await this.request({
       type: 'channel_list',
@@ -353,9 +357,12 @@ export default class RSClient {
       'get_server_time',
       'get_channels',
       'get_track_buffer',
+
       'get_tracks',
       'is_track_on_disk',
       'save_track',
+      'clear_library',
+
       'join_channel',
       'message_channel',
       'queue_post',
