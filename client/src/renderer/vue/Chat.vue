@@ -22,15 +22,18 @@
           this.scroll_down();
         }
       },
-      scroll_down() {
+      scroll_down(instant = false) {
         const messages_el = this.$refs.messages;
         const last_el = messages_el.lastElementChild;
         if(last_el) {
           last_el.scrollIntoView({
-            behavior: 'smooth',
+            behavior: instant ? 'instant' : 'smooth',
           });
         }
       },
+    },
+    mounted() {
+      this.scroll_down(true);
     },
     updated() {
       if(this.last_chat_length != this.state.chat.length) {
