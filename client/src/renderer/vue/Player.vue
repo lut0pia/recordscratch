@@ -55,7 +55,7 @@
         } else {
           audio.pause();
         }
-      }, 1000);
+      }, 100);
     },
     unmounted() {
       clearInterval(this.interval);
