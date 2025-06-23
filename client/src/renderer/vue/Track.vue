@@ -59,7 +59,7 @@
         this.now = await rs.get_server_time();
       }, 1000);
     },
-    updated() {
+    async updated() {
       this.can_save = !this.track.file_path && this.post.user_id != this.state.user.id && !await rs.is_track_on_disk(this.track.hash);
       if(this.$refs.user_name) {
         this.$refs.track.style.borderColor = this.$refs.user_name.user_color;
