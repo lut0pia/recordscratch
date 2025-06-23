@@ -330,6 +330,10 @@ export default class RSClient {
     }
   }
 
+  init_ui_state() {
+    this.update_ui_state();
+  }
+
   update_ui_state() {
     this.emit_state_update({
       user: this.user,
@@ -346,6 +350,8 @@ export default class RSClient {
 
   static get_ipc_message_in_types(is_dev) {
     const message_types = [
+      'init_ui_state',
+
       'get_server_time',
       'get_channels',
       'get_track_buffer',

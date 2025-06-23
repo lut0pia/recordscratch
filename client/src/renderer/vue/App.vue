@@ -37,6 +37,7 @@
       rs.on_notification((e, notification) => {
         console.log(notification.text);
       });
+      rs.init_ui_state();
     },
   }
 </script>
