@@ -6,13 +6,27 @@
     components: {
       QueuePost,
     },
+    data() {
+      return {
+        now: 0,
+      };
+    },
+    async mounted() {
+      this.now = await rs.get_server_time();
+      this.interval = setInterval(async () => {
+        this.now = await rs.get_server_time();
+      }, 100);
+    },
+    unmounted() {
+      clearInterval(this.interval);
+    }
   }
 </script>
 <template>
   <div id="queue">
     <QueuePost
       v-for="post in this.state.channel.queue"
-      :state=state :post=post
+      :state=state :post=post :now=now
     />
     <div v-if="this.state.channel.queue.length == 0">The queue is empty, post something!</div>
   </div>

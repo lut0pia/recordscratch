@@ -2,14 +2,9 @@
   import Track from './Track.vue';
 
   export default {
-    props: ['state', 'post'],
+    props: ['state', 'post', 'now'],
     components: {
       Track,
-    },
-    data() {
-      return {
-        now: 0,
-      };
     },
     computed: {
       post_class() {
@@ -28,15 +23,6 @@
         return (this.now - this.post.start_time) / (this.post.track.duration * 1000);
       },
     },
-    async mounted() {
-      this.now = await rs.get_server_time();
-      this.interval = setInterval(async () => {
-        this.now = await rs.get_server_time();
-      }, 1000);
-    },
-    unmounted() {
-      clearInterval(this.interval);
-    }
   }
 </script>
 <template>
