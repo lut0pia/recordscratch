@@ -34,7 +34,7 @@
           }
           const track_searchable = `${track.title} ${track.album} ${track.artist}`.toLowerCase();
           return search_words.every(w => track_searchable.includes(w));
-        }).slice(0, 128);
+        }).slice(0, 256);
       },
     },
   }

@@ -24,5 +24,6 @@
     max-width: 512px;
     margin: 0px auto;
     overflow-y: scroll;
+    padding: 0px 10px;
   }
 </style>

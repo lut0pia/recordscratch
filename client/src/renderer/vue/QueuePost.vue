@@ -41,7 +41,7 @@
 </script>
 <template>
   <div class="post" :class="post_class" 
-  :style="[post_class=='current' ?{background: `linear-gradient(90deg,lightgray ${completeness_ratio*100}%, transparent ${completeness_ratio*100}%)`} : {}]">
+  :style="[post_class=='current' ?{background: `linear-gradient(90deg,#eee ${completeness_ratio*100}%, transparent ${completeness_ratio*100}%)`} : {}]">
     <Track :state=state :track=post.track :post=post />
   </div>
 </template>
@@ -51,5 +51,8 @@
   }
   .post.obsolete {
     display: none;
+  }
+  .post.current .track {
+    background-color: transparent!important;
   }
 </style>

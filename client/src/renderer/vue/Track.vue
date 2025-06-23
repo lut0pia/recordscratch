@@ -1,7 +1,11 @@
 <script>
+  import UserName from './UserName.vue';
   import { toRaw } from 'vue';
   export default {
     props: ['state', 'track', 'post'],
+    components: {
+      UserName,
+    },
     data() {
       return {
         now: Date.now(),
@@ -34,13 +38,6 @@
       can_cancel() {
         return this.post && this.post.user_id == this.state.user.id && this.post.start_time > this.now;
       },
-      poster_name() {
-        const poster = this.state.users[this.post.user_id];
-        if(poster && poster.name) {
-          return poster.name;
-        }
-        return `Anon#${this.post.user_id}`;
-      },
     },
     methods: {
       save() {
@@ -61,7 +58,12 @@
       this.interval = setInterval(async () => {
         this.now = await rs.get_server_time();
       }, 1000);
+    },
+    updated() {
       this.can_save = !this.track.file_path && this.post.user_id != this.state.user.id && !await rs.is_track_on_disk(this.track.hash);
+      if(this.$refs.user_name) {
+        this.$refs.track.style.borderColor = this.$refs.user_name.user_color;
+      }
     },
     unmounted() {
       clearInterval(this.interval);
@@ -69,7 +71,7 @@
   }
 </script>
 <template>
-  <div class="track">
+  <div class="track" ref="track">
     <div class="right">
       <div class="duration">{{ pretty_duration }}</div>
       <div class="actions">
@@ -78,8 +80,8 @@
         <span v-if="can_cancel" @click="cancel">❌</span>
       </div>
     </div>
-    <div class="left">
-      <div v-if="post" class="poster">{{ poster_name }}</div>
+    <div class="left" :title="pretty_artist + ' - ' + track.title">
+      <UserName v-if="post" ref="user_name" :users="state.users" :user_id="post.user_id" />
       <span class="artist">{{ pretty_artist }} - </span>
       <span class="title">{{ track.title }}</span>
     </div>
@@ -87,8 +89,12 @@
 </template>
 <style>
   .track {
-    padding: 4px 4px;
-    border-bottom: 1px solid black;
+    padding-left: 4px;
+    border-left: 2px solid lightgrey;
+    margin: 4px 0px;
+  }
+  .track:hover {
+    background-color: #fbfbfb;
   }
   .track .left {
     min-height: 32px;
@@ -98,14 +104,11 @@
     text-wrap: nowrap;
   }
   :not(.post) > .track .left {
-    line-height: 32px;
+    line-height: 34px;
   }
   .track .right {
     float: right;
     text-align: right;
-  }
-  .track .poster {
-    font-weight: bold;
   }
   .track .artist {
     display: inline;

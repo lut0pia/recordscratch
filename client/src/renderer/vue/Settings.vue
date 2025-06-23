@@ -33,7 +33,7 @@
       <div class="setting" v-for="(desc, setting_name) in settings">
         <label>{{setting_name}} </label>
         <input type="text"
-          @keypress="$event.key == 'Enter' && set_setting(setting_name, $event.target.value)"
+          @keypress.enter="set_setting(setting_name, $event.target.value)"
           :value="state.settings[setting_name]" />
       </div>
     </div>
