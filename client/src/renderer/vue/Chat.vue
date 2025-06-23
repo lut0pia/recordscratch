@@ -11,7 +11,7 @@
     data() {
       return {
         message_input: '',
-        last_message_count: 0,
+        last_chat_length: 0,
       };
     },
     methods: {
@@ -33,7 +33,7 @@
       },
     },
     updated() {
-      if(this.last_message_count != this.state.chat.length) {
+      if(this.last_chat_length != this.state.chat.length) {
         const messages_el = this.$refs.messages;
         const main_el = messages_el.parentNode.parentNode;
         const last_el = messages_el.lastElementChild;
@@ -41,7 +41,7 @@
           this.scroll_down();
         }
       }
-      this.last_message_count = this.state.chat.length;
+      this.last_chat_length = this.state.chat.length;
     }
   }
 </script>
