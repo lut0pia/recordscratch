@@ -6,13 +6,13 @@ export default class RSUserSettings {
       category: 'identity',
       type: 'text',
       shared: true,
-      regexp: /^\w{1,24}$/,
+      regexp: /^.{0,24}$/,
     },
     pronouns: {
       category: 'identity',
       type: 'text',
       shared: true,
-      regexp: /^[\w\/]{1,16}$/,
+      regexp: /^.{0,10}$/,
     },
     /*
     scan_paths: {
