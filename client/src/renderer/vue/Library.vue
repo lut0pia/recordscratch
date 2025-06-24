@@ -3,10 +3,11 @@
   import Track from './Track.vue'
 
   export default {
+    props: ['state'],
     components: {
       Track,
       HeaderTextInput
-  },
+    },
     data() {
       return {
         search_query: '',
@@ -47,7 +48,7 @@
       placeholder="Search"
     />
     <div id="tracks">
-      <Track v-for="track in filtered_tracks" :track=track></Track>
+      <Track v-for="track in filtered_tracks" :state=state :track=track></Track>
       <div v-if="tracks.length == 0">No tracks in library</div>
       <div v-else-if="filtered_tracks.length == 0">No tracks match the words "{{ search_query }}"</div>
     </div>

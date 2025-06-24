@@ -1,6 +1,7 @@
 <script>
   import UserName from './UserName.vue';
   import { toRaw } from 'vue';
+  import { preview } from './preview.js'
   export default {
     props: ['state', 'track', 'post'],
     components: {
@@ -35,6 +36,9 @@
         }
         return seconds_to_time(duration);
       },
+      can_queue() {
+        return this.state && this.state.channel && !this.post;
+      },
       can_cancel() {
         return this.post && this.post.user_id == this.state.user.id && this.post.start_time > this.now;
       },
@@ -44,7 +48,7 @@
         rs.save_track(toRaw(this.track))
       },
       preview() {
-        rs.preview_track(toRaw(this.track));
+        preview.track = toRaw(this.track);
       },
       queue() {
         rs.queue_post(toRaw(this.track));
@@ -75,9 +79,10 @@
     <div class="right">
       <div class="duration">{{ pretty_duration }}</div>
       <div class="actions">
-        <span v-if="can_save" @click="save">💾</span>
-        <span v-if="!post" @click="queue">▶</span>
-        <span v-if="can_cancel" @click="cancel">❌</span>
+        <span title="Preview" @click="preview">🎧</span>
+        <span v-if="can_save" title="Save" @click="save">💾</span>
+        <span v-if="can_queue" title="Queue" @click="queue">▶</span>
+        <span v-if="can_cancel" title="Cancel" @click="cancel">❌</span>
       </div>
     </div>
     <div class="left" :title="pretty_artist + ' - ' + track.title">
@@ -97,14 +102,13 @@
     background-color: #fbfbfb;
   }
   .track .left {
-    min-height: 32px;
-    width: 80%;
+    width: calc(100% - 70px);
     text-overflow: ellipsis;
     overflow: hidden;
     text-wrap: nowrap;
   }
   :not(.post) > .track .left {
-    line-height: 34px;
+    line-height: 38px;
   }
   .track .right {
     float: right;

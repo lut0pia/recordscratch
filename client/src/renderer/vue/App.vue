@@ -53,15 +53,15 @@
   <div id="content">
     <div id="main">
       <Channels v-if="current_panel == 'channels'"/>
-      <Library v-else-if="current_panel == 'library'"/>
+      <Library v-else-if="current_panel == 'library'" :state=state />
       <Queue v-else-if="current_panel == 'queue'"/>
-      <Chat v-else-if="current_panel == 'chat'" :state="state" />
+      <Chat v-else-if="current_panel == 'chat'" :state=state />
       <Settings v-else-if="current_panel == 'settings'" :state=state />
     </div>
     <Queue v-if="!is_mobile && state.channel" :state=state />
   </div>
   <NotificationTray/>
-  <Player v-if="state.channel" :state=state />
+  <Player :state=state />
 </template>
 <style>
   body {
