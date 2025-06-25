@@ -8,7 +8,8 @@
     data() {
       return {
         now: 0,
-        track_srcs: {},
+        track_src_hash: null,
+        track_src: '',
       };
     },
     computed: {
@@ -47,15 +48,19 @@
             artist: track.artist,
             album: track.album,
           });
-          if(!this.track_srcs[track.hash]) {
+          if(this.track_src_hash != track.hash) {
+            if(this.track_src) {
+              URL.revokeObjectURL(this.track_src);
+              this.track_src = '';
+            }
             const buffer = await rs.get_track_buffer(toRaw(track));
             if(buffer) {
-              const url = await URL.createObjectURL(new Blob([buffer]));
-              this.track_srcs[track.hash] = url;
+              this.track_src = await URL.createObjectURL(new Blob([buffer]));
+              this.track_src_hash = track.hash;
             }
           }
-          if(audio.src != this.track_srcs[track.hash]) {
-            audio.src = this.track_srcs[track.hash]
+          if(audio.src != this.track_src) {
+            audio.src = this.track_src;
           }
           if(!this.current_preview) {
             const wanted_current_time = (this.now - this.current_post.start_time) / 1000;
