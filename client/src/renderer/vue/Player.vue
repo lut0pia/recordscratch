@@ -71,6 +71,8 @@
 
           audio.play();
         } else {
+          navigator.mediaSession.metadata = new MediaMetadata({});
+          audio.src = '';
           audio.pause();
         }
       }, 100);
