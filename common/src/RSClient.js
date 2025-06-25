@@ -173,10 +173,17 @@ export default class RSClient {
       });
       return;
     }
-    const dir_path = `${os.homedir()}/Music/RecordScratch/${track.artist}/${track.album}`;
+    const sanitize_filename = s => {
+      return s.replace('?', '')
+        .replace('|', '_').replace(':', '')
+        .replace('/', '-').replace('*', '-')
+        .replace('<', '-').replace('>', '-')
+        .replace('"', '').trim();
+    };
+    const dir_path = `${os.homedir()}/Music/RecordScratch/${sanitize_filename(track.artist)}/${sanitize_filename(track.album)}`;
     await fs.mkdir(dir_path, {recursive: true});
     const ext = track.filename.slice(track.filename.lastIndexOf("."));
-    const file_path = `${dir_path}/${track.title}${ext}`;
+    const file_path = `${dir_path}/${sanitize_filename(track.title)}${ext}`;
     await fs.writeFile(file_path, track_buffer);
     this.user_log({
       type: 'log',
