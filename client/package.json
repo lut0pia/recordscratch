@@ -8,12 +8,13 @@
   },
   "type": "module",
   "scripts": {
-    "preview": "electron-vite preview",
-    "build": "electron-vite build",
-    "dev": "electron-vite dev",
-    "pack": "electron-vite build && electron-builder --dir",
-    "dist": "electron-vite build && electron-builder",
-    "lint": "echo \"No linting configured\""
+    "desktop-dev": "electron-vite dev",
+    "desktop-build": "electron-vite build",
+    "desktop-preview": "electron-vite preview",
+    "desktop-dist": "electron-vite build && electron-builder",
+    "web-dev": "vite",
+    "web-build": "vite build",
+    "web-preview": "vite preview"
   },
   "main": "./out/main/index.js",
   "dependencies": {
@@ -32,6 +33,7 @@
     "electron-vite": "^3.1.0",
     "less": "^4.1.3",
     "vite": "^6.3.5",
+    "vite-plugin-node-polyfills": "0.23.0",
     "vue": "^3.2.47"
   },
   "keywords": [],
