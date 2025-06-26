@@ -35,7 +35,9 @@
         this.state = state;
       });
       rs.on_notification((e, notification) => {
-        console.log(notification.text);
+        if(!this.state.is_browser) {
+          console.log(notification.text);
+        }
       });
       rs.init_ui_state();
     },
