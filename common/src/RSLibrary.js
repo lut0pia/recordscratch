@@ -1,4 +1,4 @@
-import fs from 'fs/promises';
+import fs from './RSFileSystem.js';
 import os from 'os';
 import RSTrack from './RSTrack.js';
 
@@ -13,10 +13,11 @@ export default class RSLibrary {
     this.albums = {};
     this.tracks_by_hash = {};
     this.tracks_by_path = {};
-
-    this.scan_library();
-
-    console.log(`Scan paths: ${this.scan_paths}`);
+    
+    if(!fs.is_fake) {
+      console.log(`Scan paths: ${this.scan_paths}`);
+      this.scan_library();
+    }
   }
 
   save_to_file() {

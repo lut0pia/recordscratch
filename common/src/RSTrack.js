@@ -1,4 +1,4 @@
-import fs from 'fs/promises';
+import fs from './RSFileSystem.js';
 import { createHash } from 'crypto';
 import { parseBuffer } from 'music-metadata';
 

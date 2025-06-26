@@ -1,4 +1,4 @@
-import fs from 'fs/promises';
+import fs from './RSFileSystem.js';
 
 export default class RSUserSettings {
   static descriptions = {

@@ -1,4 +1,4 @@
-import fs from 'fs/promises';
+import fs from './RSFileSystem.js';
 import os from 'os';
 import RSLibrary from "./RSLibrary.js";
 import RSUserRegistry from './RSUserRegistry.js';
