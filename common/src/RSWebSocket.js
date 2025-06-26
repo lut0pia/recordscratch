@@ -1,4 +1,4 @@
-import WebSocket from 'ws';
+import WebSocket from 'isomorphic-ws';
 import RSWebSocketMessage from './RSWebSocketMessage.js';
 
 export default class RSWebSocket {
@@ -17,35 +17,36 @@ export default class RSWebSocket {
   }
 
   connect() {
-    const ws = this.wsc = new WebSocket(this.get_address(), {});
-    ws.on('error', (error) =>{
-      console.error(error);
+    const address = this.get_address();
+    const ws = this.wsc = new WebSocket(address);
+    ws.binaryType = "arraybuffer";
+    ws.onerror = (e) => {
       this.address_offset = (this.address_offset + 1) % this.addresses.length;
-    });
-    ws.on('open', () => {
-      console.log(`WebSocket connected to ${this.get_address()}`);
+    };
+    ws.onopen = () => {
+      console.log(`WebSocket connected to ${address}`);
       this.reconnect_wait = 1000;
       if(this.client.on_connection) {
         this.client.on_connection();
       }
-    });
-    ws.on('close', (code, reason) => {
-      console.log(`WebSocket disconnected (${code}), reconnect attempt in ${this.reconnect_wait/1000} seconds...`);
+    };
+    ws.onclose = (e) => {
+      console.log(`WebSocket disconnected from ${address}, reconnect attempt in ${this.reconnect_wait/1000} seconds...`);
       setTimeout(() => this.connect(), this.reconnect_wait);
       this.reconnect_wait *= 2;
       if(this.client.on_disconnection) {
         this.client.on_disconnection();
       }
-    });
-    ws.on('message', (msg_raw, is_binary) => {
-      const msg = RSWebSocketMessage.to_object(msg_raw);
+    };
+    ws.onmessage = (e) => {
+      const msg = RSWebSocketMessage.to_object(e.data);
       if(this.requests[msg.id]) {
         this.requests[msg.id].resolve(msg);
         delete this.requests[msg.id];
       } else {
         this.client.on_message(msg);
       }
-    });
+    };
   }
 
   async request(msg) {

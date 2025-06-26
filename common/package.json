@@ -13,7 +13,8 @@
   ],
   "dependencies": {
     "music-metadata": "^10.0.0",
-    "ws": "^8.13.0"
+    "ws": "^8.13.0",
+    "isomorphic-ws": "^5.0.0"
   },
   "repository": {
     "type": "git",
