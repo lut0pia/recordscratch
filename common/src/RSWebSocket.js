@@ -16,6 +16,10 @@ export default class RSWebSocket {
     return this.addresses[this.address_offset];
   }
 
+  is_connected() {
+    return this.wsc.readyState == WebSocket.OPEN;
+  }
+
   connect() {
     const address = this.get_address();
     const ws = this.wsc = new WebSocket(address);

@@ -36,6 +36,7 @@ export default class RSClient {
     this.user = user_response.user;
     await this.update_server_time_offset();
     await this.upload_user_properties();
+    this.update_ui_state();
   }
 
   on_disconnection() {
@@ -44,6 +45,9 @@ export default class RSClient {
         type: 'error',
         text: `Disconnected from server!`,
       });
+    }
+    if(this.emit_state_update) {
+      this.update_ui_state();
     }
   }
 
@@ -344,6 +348,7 @@ export default class RSClient {
 
   update_ui_state() {
     this.emit_state_update({
+      connected: this.ws.is_connected(),
       user: this.user,
       users: this.users.users,
       channel: this.channel_state,

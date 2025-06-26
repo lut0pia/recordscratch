@@ -50,7 +50,7 @@
     <a title="Settings" @click="select_panel('settings')" :class="{active:current_panel == 'settings'}">⚙️</a>
     <span v-if="state.channel" id="channel_name">#{{state.channel.name}} (🧍{{ state.channel.user_count }})</span>
   </div>
-  <div id="content">
+  <div id="content" v-if="state.connected">
     <div id="main">
       <Channels v-if="current_panel == 'channels'"/>
       <Library v-else-if="current_panel == 'library'" :state=state />
