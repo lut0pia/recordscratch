@@ -38,8 +38,11 @@ export default class RSWebSocketMessage {
   }
 
   static to_object(array) {
+    if(array instanceof ArrayBuffer) {
+      array = new Uint8Array(array);
+    }
     if(!(array instanceof Uint8Array)) {
-      console.error(`Incorrect type`);
+      console.error(`Incorrect type for WS message: ${array.constructor.name}`);
     }
     // We have to account for byteOffset because the array we're given does not start at the beginning of its buffer
     const buffer_view = new DataView(array.buffer, array.byteOffset);
