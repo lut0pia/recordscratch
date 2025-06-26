@@ -8,6 +8,8 @@
   import Chat from './Chat.vue'
   import Settings from './Settings.vue'
 
+  const drag_events = ['dragenter', 'dragover', 'dragleave', 'drop'];
+
   export default {
     components: {
       NotificationTray, Player,
@@ -28,6 +30,9 @@
     mounted() {
       const app_el = document.getElementById('app');
       app_el.style.height = `${window.innerHeight}px`;
+      drag_events.forEach(name => {
+        document.body.addEventListener(name, e => e.preventDefault());
+      });
       window.addEventListener('resize', e => {
         app_el.style.height = `${window.innerHeight}px`;
       });
@@ -41,6 +46,11 @@
       });
       rs.init_ui_state();
     },
+    unmounted() {
+      drag_events.forEach(name => {
+        document.body.removeEventListener(name, e => e.preventDefault());
+      });
+    }
   }
 </script>
 <template>

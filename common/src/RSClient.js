@@ -4,6 +4,7 @@ import RSLibrary from "./RSLibrary.js";
 import RSUserRegistry from './RSUserRegistry.js';
 import RSWebSocket from "./RSWebSocket.js";
 import RSUserSettings from './RSUserSettings.js';
+import RSTrack from './RSTrack.js';
 
 const server_addresses = [
   'ws://127.0.0.1:18535',
@@ -238,6 +239,12 @@ export default class RSClient {
   }
 
   async queue_post(track) {
+    if(track.buffer && !track.hash) {
+      const buffered_track = track;
+      track = await RSTrack.from_buffer(track.buffer, track.filename);
+      Object.assign(track, buffered_track);
+    }
+
     const server_track = await this.request({
       type: 'track_get',
       track_hash: track.hash,
@@ -245,7 +252,7 @@ export default class RSClient {
 
     // If the track couldn't be found, upload it
     if(server_track.status == 'error') {
-      const track_buffer = await fs.readFile(track.file_path);
+      const track_buffer = track.buffer || await fs.readFile(track.file_path);
       const upload_response = await this.request({
         type: 'track_upload',
         track_buffer: track_buffer,

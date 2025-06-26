@@ -11,6 +11,24 @@
         now: 0,
       };
     },
+    methods: {
+      async drop(e) {
+        const files = [...e.dataTransfer.files];
+        for(let file of files) {
+          if(!file.name.match(/\.(mp3|m4a|ogg|flac)$/i)) {
+            continue;
+          }
+          const reader = new FileReader();
+          reader.onload = e => {
+            rs.queue_post({
+              filename: file.name,
+              buffer: new Uint8Array(e.target.result),
+            });
+          }
+          reader.readAsArrayBuffer(file);
+        }
+      },
+    },
     async mounted() {
       this.now = await rs.get_server_time();
       this.interval = setInterval(async () => {
@@ -23,7 +41,7 @@
   }
 </script>
 <template>
-  <div id="queue">
+  <div id="queue" @drop.prevent="drop">
     <QueuePost
       v-for="post in this.state.channel.queue"
       :state=state :post=post :now=now
