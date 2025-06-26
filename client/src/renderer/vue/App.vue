@@ -44,7 +44,7 @@
 <template>
   <div id="header">
     <a title="Channels" @click="select_panel('channels')" :class="{active:current_panel == 'channels'}">📻</a>
-    <a title="Library" @click="select_panel('library')" :class="{active:current_panel == 'library'}">💿</a>
+    <a v-if="!state.is_browser" title="Library" @click="select_panel('library')" :class="{active:current_panel == 'library'}">💿</a>
     <a v-if="is_mobile" title="Queue" @click="select_panel('queue')" :class="{active:current_panel == 'queue'}">☰</a>
     <a v-if="state.channel" title="Chat" @click="select_panel('chat')" :class="{active:current_panel == 'chat'}">💬</a>
     <a title="Settings" @click="select_panel('settings')" :class="{active:current_panel == 'settings'}">⚙️</a>

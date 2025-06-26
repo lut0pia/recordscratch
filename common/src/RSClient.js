@@ -348,6 +348,7 @@ export default class RSClient {
 
   update_ui_state() {
     this.emit_state_update({
+      is_browser: typeof window !== "undefined",
       connected: this.ws.is_connected(),
       user: this.user,
       users: this.users.users,
