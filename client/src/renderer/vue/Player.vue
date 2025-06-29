@@ -31,7 +31,13 @@
     },
     async mounted() {
       this.now = await rs.get_server_time();
+      let updating = false;
       this.interval = setInterval(async () => {
+        if(updating) {
+          return;
+        }
+        updating = true;
+
         this.now = await rs.get_server_time();
 
         let track = null;
@@ -75,6 +81,8 @@
           delete audio.src;
           audio.pause();
         }
+
+        updating = false;
       }, 100);
     },
     unmounted() {
