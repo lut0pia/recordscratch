@@ -6,11 +6,15 @@ import RSWebSocket from "./RSWebSocket.js";
 import RSUserSettings from './RSUserSettings.js';
 import RSTrack from './RSTrack.js';
 
-const server_addresses = [
-  'ws://127.0.0.1:18535',
-  'ws://127.0.0.1',
+let server_addresses = [
   'wss://recordscratch.lutopia.net',
 ];
+
+if(!location || location.hostname != 'recordscratch.lutopia.net') {
+  server_addresses.unshift(
+    'ws://127.0.0.1',
+  );
+}
 
 export default class RSClient {
   constructor() {
