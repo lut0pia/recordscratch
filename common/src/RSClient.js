@@ -10,7 +10,7 @@ let server_addresses = [
   'wss://recordscratch.lutopia.net',
 ];
 
-if(!location || location.hostname != 'recordscratch.lutopia.net') {
+if(typeof location == 'undefined' || location.hostname != 'recordscratch.lutopia.net') {
   server_addresses.unshift(
     'ws://127.0.0.1',
   );
