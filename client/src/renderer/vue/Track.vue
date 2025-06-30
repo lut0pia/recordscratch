@@ -64,7 +64,10 @@
       }, 1000);
     },
     async updated() {
-      this.can_save = !this.track.file_path && this.post.user_id != this.state.user.id && !await rs.is_track_on_disk(this.track.hash);
+      this.can_save = !this.state.is_browser
+       && !this.track.file_path
+       && this.post.user_id != this.state.user.id
+       && !await rs.is_track_on_disk(this.track.hash);
       if(this.$refs.user_name) {
         this.$refs.track.style.borderColor = this.$refs.user_name.user_color;
       }
