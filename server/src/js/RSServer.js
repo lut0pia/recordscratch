@@ -10,8 +10,9 @@ import post_queue from './msg/post_queue.js';
 import time_get from './msg/time_get.js';
 import track_download from './msg/track_download.js';
 import track_get from './msg/track_get.js';
-import track_upload from './msg/track_upload.js'
+import track_upload from './msg/track_upload.js';
 import user_get from './msg/user_get.js';
+import user_message from './msg/user_message.js';
 import user_set_property from './msg/user_set_property.js';
 
 const msg_types = [
@@ -26,6 +27,7 @@ const msg_types = [
   track_get,
   track_upload,
   user_get,
+  user_message,
   user_set_property,
 ];
 
@@ -34,6 +36,7 @@ export default class RSServer {
     this.tracks = {};
     this.channels = {};
     this.connections = new Set();
+    this.user_id_to_conn = {};
     this.users = new RSUserRegistry();
     this.users.on_user_property_change = (user_id, key, value) => {
       this.broadcast({
@@ -51,6 +54,7 @@ export default class RSServer {
     conn.id = this.get_next_id();
     this.connections.add(conn);
     this.users.create_user(conn.id);
+    this.user_id_to_conn[conn.id] = conn;
     console.log(`Connection: ${conn.id} (${request.socket.remoteAddress})`);
   }
 
@@ -58,6 +62,7 @@ export default class RSServer {
     if(conn.channel) {
       conn.channel.leave(conn);
     }
+    delete this.user_id_to_conn[conn.id];
     this.users.remove_user(conn.id);
     this.connections.delete(conn);
     console.log(`Disconnection: ${conn.id} (${code}: ${reason})`);
