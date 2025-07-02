@@ -1,12 +1,18 @@
 # syntax=docker/dockerfile:1
 
 FROM node:18-alpine AS builder
+
+WORKDIR /app/common
+COPY ./common/package*.json /app/common/
+RUN npm install
+
 WORKDIR /app/client
+COPY ./client/package*.json /app/client/
+RUN npm install
+
 COPY ./common /app/common
 COPY ./client /app/client
-RUN npm install && npm install --prefix ../common
 RUN npm run web-build
-CMD ["node", "src/js/index.js"]
 
 FROM nginx:alpine
 EXPOSE 80/tcp

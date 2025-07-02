@@ -1,9 +1,17 @@
 # syntax=docker/dockerfile:1
 
 FROM node:18-alpine
-WORKDIR /app/server
 EXPOSE 80/tcp
-COPY ./server /app/server
+
+WORKDIR /app/common
+COPY ./common/package*.json /app/common/
+RUN npm install
+
+WORKDIR /app/server
+COPY ./server/package*.json /app/server/
+RUN npm install
+
 COPY ./common /app/common
-RUN npm install && npm install --prefix ../common
+COPY ./server /app/server
+
 CMD ["node", "src/js/index.js"]
