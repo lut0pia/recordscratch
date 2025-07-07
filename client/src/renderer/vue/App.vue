@@ -30,6 +30,7 @@
     mounted() {
       const app_el = document.getElementById('app');
       app_el.style.height = `${window.innerHeight}px`;
+      app_el.classList.toggle('mobile', this.is_mobile);
       drag_events.forEach(name => {
         document.body.addEventListener(name, e => e.preventDefault());
       });
@@ -57,7 +58,7 @@
   <div id="header">
     <a title="Channels" @click="select_panel('channels')" :class="{active:current_panel == 'channels'}">📻</a>
     <a v-if="!state.is_browser" title="Library" @click="select_panel('library')" :class="{active:current_panel == 'library'}">💿</a>
-    <a v-if="is_mobile" title="Queue" @click="select_panel('queue')" :class="{active:current_panel == 'queue'}">☰</a>
+    <a v-if="state.channel && is_mobile" title="Queue" @click="select_panel('queue')" :class="{active:current_panel == 'queue'}">☰</a>
     <a v-if="state.channel" title="Chat" @click="select_panel('chat')" :class="{active:current_panel == 'chat'}">💬</a>
     <a title="Settings" @click="select_panel('settings')" :class="{active:current_panel == 'settings'}">⚙️</a>
     <span v-if="state.channel" id="channel_name">#{{state.channel.name}} (🧍{{ state.channel.user_count }})</span>
@@ -66,7 +67,7 @@
     <div id="main">
       <Channels v-if="current_panel == 'channels'"/>
       <Library v-else-if="current_panel == 'library'" :state=state />
-      <Queue v-else-if="current_panel == 'queue'"/>
+      <Queue v-else-if="current_panel == 'queue'" :state="state"/>
       <Chat v-else-if="current_panel == 'chat'" :state=state />
       <Settings v-else-if="current_panel == 'settings'" :state=state />
     </div>
@@ -105,7 +106,12 @@
   #header a.active {
     background-color: grey;
   }
-  #channel_name {
+  #app.mobile #channel_name {
+    display: block;
+    margin: 0px 8px 8px;
+    font-size: 18px;
+  }
+  #app:not(.mobile) #channel_name {
     float: right;
     line-height: 40px;
     margin: 8px 0px;

@@ -50,12 +50,12 @@
   </div>
 </template>
 <style>
-  #queue {
+  #app:not(.mobile) #queue {
     width: 30%;
     min-width: 400px;
     max-width: 512px;
     margin: 0px auto;
     overflow-y: scroll;
-    padding: 0px 10px;
+    padding: 10px;
   }
 </style>
