@@ -9,6 +9,7 @@
     data() {
       return {
         now: 0,
+        drag_count: 0,
       };
     },
     methods: {
@@ -27,7 +28,14 @@
           }
           reader.readAsArrayBuffer(file);
         }
+        this.drag_count = 0;
       },
+      dragenter(e) {
+        this.drag_count += 1;
+      },
+      dragleave(e) {
+        this.drag_count -= 1;
+      }
     },
     async mounted() {
       this.now = await rs.get_server_time();
@@ -41,12 +49,14 @@
   }
 </script>
 <template>
-  <div id="queue" @drop.prevent="drop">
+  <div id="queue" :class="{dragging:drag_count>0}"
+    @drop.prevent="drop" @dragenter.prevent="dragenter" @dragleave.prevent="dragleave">
     <QueuePost
       v-for="post in this.state.channel.queue"
       :state=state :post=post :now=now
     />
-    <div v-if="this.state.channel.queue.length == 0">The queue is empty, post something!</div>
+    <span v-if="this.state.channel.queue.length == 0">😕 The queue is empty, find some music to start playing in your library or drag the audio file here.</span>
+    <div class="drag_icon">📥</div>
   </div>
 </template>
 <style>
@@ -57,5 +67,25 @@
     margin: 0px auto;
     overflow-y: scroll;
     padding: 10px;
+  }
+
+  #queue.dragging {
+    background-color: #f0f0f0;
+    position: relative;
+  }
+  #queue.dragging .drag_icon {
+    font-size: 100px;
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    transform-origin: center;
+  }
+  #queue:not(.dragging) .drag_icon {
+    display: none;
+  }
+  #queue.dragging :not(.drag_icon) {
+    display: none;
   }
 </style>

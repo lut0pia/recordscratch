@@ -102,7 +102,7 @@
     margin: 4px 0px;
   }
   .track:hover {
-    background-color: #fbfbfb;
+    background-color: #f0f0f0;
   }
   .track .left {
     width: calc(100% - 70px);
