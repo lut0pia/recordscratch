@@ -19,9 +19,9 @@ for(let ipc_message of ipc_message_in_types) {
 
 // Prepare for handling requests from the client
 for(let ipc_message_type of ipc_message_out_types) {
-  let callback = null;
-  rs[`on_${ipc_message_type}`] = f => callback = f;
+  let callbacks = [];
+  rs[`on_${ipc_message_type}`] = f => callbacks.push(f);
   RSClient.prototype['emit_'+ipc_message_type] = (...args) => {
-    callback(null, ...args);
+    callbacks.forEach(f => f(null, ...args));
   }
 }
