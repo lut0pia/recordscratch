@@ -72,11 +72,13 @@ export default class RSClient {
         break;
       case 'channel_message':
         await this.conditional_fetch_user(msg.user_id);
-        this.chat.push({
+        const chat_msg = {
           user_id: msg.user_id,
           message: msg.message,
-        });
+        };
+        this.chat.push(chat_msg);
         this.update_ui_state();
+        this.emit_chat_message(chat_msg)
         break;
       case 'user_property':
         if(this.users.get_user(msg.user_id)) {
@@ -405,7 +407,7 @@ export default class RSClient {
     const message_types = [
       'state_update',
       'notification',
-      'play'
+      'chat_message',
     ];
     return message_types;
   }

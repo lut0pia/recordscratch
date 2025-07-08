@@ -40,11 +40,24 @@
         app_el.style.height = `${window.innerHeight}px`;
       });
       rs.on_state_update((e, state) => {
+        const previous_channel = this.state.channel;
         this.state = state;
+        if(state.channel.name != previous_channel.name) {
+            delete shared.panel_badge.chat;
+        }
       });
       rs.on_notification((e, notification) => {
         if(!this.state.is_browser) {
           console.log(notification.text);
+        }
+      });
+      rs.on_chat_message((e, msg) => {
+        if(shared.current_panel != 'chat') {
+          if(shared.panel_badge.chat) {
+            shared.panel_badge.chat += 1;
+          } else {
+            shared.panel_badge.chat = 1;
+          }
         }
       });
       rs.init_ui_state();
@@ -88,8 +101,6 @@
     flex-direction: column;
   }
   #header {
-    font-size: 32px;
-    line-height: 1;
     background-color: lightgray;
   }
 
@@ -101,6 +112,7 @@
   #app:not(.mobile) #channel_name {
     float: right;
     line-height: 40px;
+    font-size: 32px;
     margin: 8px 0px;
     width: 30%;
     min-width: 400px;

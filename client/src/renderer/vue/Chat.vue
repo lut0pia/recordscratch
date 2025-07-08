@@ -2,6 +2,8 @@
   import HeaderTextInput from './HeaderTextInput.vue';
   import Message from './Message.vue';
 
+  import { shared } from './shared.js'
+
   export default {
     props: ['state'],
     components: {
@@ -34,6 +36,7 @@
     },
     mounted() {
       this.scroll_down(true);
+      shared.panel_badge.chat = '';
     },
     updated() {
       if(this.last_chat_length != this.state.chat.length) {
