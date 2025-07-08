@@ -105,7 +105,7 @@
     background-color: #f0f0f0;
   }
   .track .left {
-    width: calc(100% - 70px);
+    width: calc(100% - 85px);
     text-overflow: ellipsis;
     overflow: hidden;
     text-wrap: nowrap;
