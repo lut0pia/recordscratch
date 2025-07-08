@@ -1,6 +1,6 @@
 <script>
   import { toRaw } from 'vue';
-  import { preview } from './preview.js'
+  import { shared } from './shared.js'
   export default {
     props: [
       'state',
@@ -21,12 +21,12 @@
         }
       },
       current_preview() {
-        return preview.track;
+        return shared.track;
       }
     },
     methods: {
       exit() {
-        preview.track = null;
+        shared.track = null;
       }
     },
     async mounted() {

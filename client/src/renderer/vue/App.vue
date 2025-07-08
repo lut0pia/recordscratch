@@ -1,4 +1,5 @@
 <script>
+  import HeaderButton from './HeaderButton.vue'
   import NotificationTray from './NotificationTray.vue'
   import Player from './Player.vue'
 
@@ -8,24 +9,25 @@
   import Chat from './Chat.vue'
   import Settings from './Settings.vue'
 
+  import { shared } from './shared.js'
+
   const drag_events = ['dragenter', 'dragover', 'dragleave', 'drop'];
 
   export default {
     components: {
-      NotificationTray, Player,
+      HeaderButton, NotificationTray, Player,
       Channels, Library, Queue, Chat, Settings
     },
     data() {
       return {
-        current_panel: 'channels',
         state: {},
         is_mobile: window.innerWidth < 1000,
       };
     },
-    methods: {
-      select_panel(panel) {
-        this.current_panel = panel;
-      },
+    computed: {
+      current_panel() {
+        return shared.current_panel;
+      }
     },
     mounted() {
       const app_el = document.getElementById('app');
@@ -56,11 +58,11 @@
 </script>
 <template>
   <div id="header">
-    <a title="Channels" @click="select_panel('channels')" :class="{active:current_panel == 'channels'}">📻</a>
-    <a v-if="!state.is_browser" title="Library" @click="select_panel('library')" :class="{active:current_panel == 'library'}">💿</a>
-    <a v-if="state.channel && is_mobile" title="Queue" @click="select_panel('queue')" :class="{active:current_panel == 'queue'}">☰</a>
-    <a v-if="state.channel" title="Chat" @click="select_panel('chat')" :class="{active:current_panel == 'chat'}">💬</a>
-    <a title="Settings" @click="select_panel('settings')" :class="{active:current_panel == 'settings'}">⚙️</a>
+    <HeaderButton name="channels" icon="📻" />
+    <HeaderButton v-if="!state.is_browser" name="library" icon="💿" />
+    <HeaderButton v-if="state.channel && is_mobile" name="queue" icon="☰" />
+    <HeaderButton v-if="state.channel" name="chat" icon="💬" />
+    <HeaderButton name="settings" icon="⚙️" />
     <span v-if="state.channel" id="channel_name">#{{state.channel.name}} (🧍{{ state.channel.user_count }})</span>
   </div>
   <div id="content" v-if="state.connected">
@@ -90,22 +92,7 @@
     line-height: 1;
     background-color: lightgray;
   }
-  #header a {
-    display: inline-block;
-    width: 50px;
-    height: 40px;
-    text-align: center;
-    line-height: 40px;
-    border-radius: 10px;
-    background-color: white;
-    margin: 8px 0px 8px 8px;
-  }
-  #header a:hover {
-    cursor: pointer;
-  }
-  #header a.active {
-    background-color: grey;
-  }
+
   #app.mobile #channel_name {
     display: block;
     margin: 0px 8px 8px;

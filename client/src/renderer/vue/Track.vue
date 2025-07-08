@@ -1,7 +1,7 @@
 <script>
   import UserName from './UserName.vue';
   import { toRaw } from 'vue';
-  import { preview } from './preview.js'
+  import { shared } from './shared.js'
   export default {
     props: ['state', 'track', 'post'],
     components: {
@@ -48,7 +48,7 @@
         rs.save_track(toRaw(this.track))
       },
       preview() {
-        preview.track = toRaw(this.track);
+        shared.track = toRaw(this.track);
       },
       queue() {
         rs.queue_post(toRaw(this.track));
