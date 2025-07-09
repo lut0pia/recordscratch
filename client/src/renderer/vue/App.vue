@@ -42,7 +42,7 @@
       rs.on_state_update((e, state) => {
         const previous_channel = this.state.channel;
         this.state = state;
-        if(state.channel.name != previous_channel.name) {
+        if(previous_channel && state.channel && state.channel.name != previous_channel.name) {
             delete shared.panel_badge.chat;
         }
       });
