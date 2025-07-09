@@ -70,7 +70,7 @@
           }
           if(!this.current_preview) {
             const wanted_current_time = (this.now - this.current_post.start_time) / 1000;
-            if(Math.abs(audio.currentTime - wanted_current_time) > 1) {
+            if(Math.abs(audio.currentTime - wanted_current_time) > 0.1) {
               audio.currentTime = wanted_current_time;
             }
           }
