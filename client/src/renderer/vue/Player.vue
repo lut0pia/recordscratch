@@ -58,6 +58,7 @@
             if(this.track_src) {
               URL.revokeObjectURL(this.track_src);
               this.track_src = '';
+              audio.src = '';
             }
             const buffer = await rs.get_track_buffer(toRaw(track));
             if(buffer) {
