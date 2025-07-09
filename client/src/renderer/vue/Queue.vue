@@ -1,6 +1,22 @@
 <script>
   import QueuePost from './QueuePost.vue';
 
+  function queue_files(files) {
+      for(let file of files) {
+        if(!file.name.match(/\.(mp3|m4a|ogg|flac)$/i)) {
+          continue;
+        }
+        const reader = new FileReader();
+        reader.onload = e => {
+          rs.queue_post({
+            filename: file.name,
+            buffer: new Uint8Array(e.target.result),
+          });
+        }
+        reader.readAsArrayBuffer(file);
+      }
+  }
+
   export default {
     props: ['state'],
     components: {
@@ -13,21 +29,8 @@
       };
     },
     methods: {
-      async drop(e) {
-        const files = [...e.dataTransfer.files];
-        for(let file of files) {
-          if(!file.name.match(/\.(mp3|m4a|ogg|flac)$/i)) {
-            continue;
-          }
-          const reader = new FileReader();
-          reader.onload = e => {
-            rs.queue_post({
-              filename: file.name,
-              buffer: new Uint8Array(e.target.result),
-            });
-          }
-          reader.readAsArrayBuffer(file);
-        }
+      drop(e) {
+        queue_files([...e.dataTransfer.files]);
         this.drag_count = 0;
       },
       dragenter(e) {
@@ -35,6 +38,10 @@
       },
       dragleave(e) {
         this.drag_count -= 1;
+      },
+      
+      file_input_change(e) {
+        queue_files([...e.target.files]);
       }
     },
     async mounted() {
@@ -55,8 +62,12 @@
       v-for="post in this.state.channel.queue"
       :state=state :post=post :now=now
     />
-    <span v-if="this.state.channel.queue.length == 0">😕 The queue is empty, find some music to start playing in your library or drag the audio file here.</span>
+    <span v-if="this.state.channel.queue.length == 0">😕 The queue is empty, find some music to start playing in your library, or drag/select audio files here.</span>
     <div class="drag_icon">📥</div>
+    <label class="file_input" title="Select audio files to add to queue">
+      <input type="file" accept="audio/*" multiple @change="file_input_change"/>
+      📥
+    </label>
   </div>
 </template>
 <style>
@@ -86,6 +97,21 @@
     display: none;
   }
   #queue.dragging :not(.drag_icon) {
+    display: none;
+  }
+
+  .file_input {
+    background-color: #f0f0f0;
+    display: block;
+    cursor: pointer;
+    padding-bottom: 8px;
+    border-left: 2px solid lightgrey;
+    margin: 4px 0px;
+    text-align: center;
+    font-size: 30px;
+    line-height: 30px;
+  }
+  .file_input input {
     display: none;
   }
 </style>
