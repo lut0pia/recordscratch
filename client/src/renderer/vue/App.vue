@@ -76,7 +76,10 @@
     <HeaderButton v-if="state.channel && is_mobile" name="queue" icon="☰" />
     <HeaderButton v-if="state.channel" name="chat" icon="💬" />
     <HeaderButton name="settings" icon="⚙️" />
-    <span v-if="state.channel" id="channel_name">#{{state.channel.name}} (🧍{{ state.channel.user_count }})</span>
+    <span v-if="state.channel" id="channel_header">
+      <span>#{{state.channel.name}}</span>
+      <span>🧍{{ state.channel.user_count }}</span>
+    </span>
   </div>
   <div id="content" v-if="state.connected">
     <div id="main">
@@ -102,21 +105,38 @@
   }
   #header {
     background-color: lightgray;
+    padding-top: 8px;
+    padding-left: 8px;
   }
 
-  #app.mobile #channel_name {
-    display: block;
-    margin: 0px 8px 8px;
-    font-size: 18px;
-  }
-  #app:not(.mobile) #channel_name {
-    float: right;
-    line-height: 40px;
+  #channel_header {
     font-size: 32px;
-    margin: 8px 0px;
+    line-height: 40px;
+  }
+  #app.mobile #channel_header {
+    display: block;
+  }
+  #app:not(.mobile) #channel_header {
+    float: right;
     width: 30%;
     min-width: 400px;
     max-width: 512px;
+    padding: 0px 10px;
+  }
+  #channel_header > * {
+    display: inline-block;
+    text-align: center;
+    vertical-align: top;
+    background-color: white;
+    min-width: 50px;
+    height: 40px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    margin-right: 8px;
+  }
+  #channel_header > *:first-child {
+    font-size: 24px;
+    padding: 0px 8px;
   }
   a {
     cursor: pointer;

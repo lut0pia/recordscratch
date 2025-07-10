@@ -40,7 +40,8 @@
     line-height: 40px;
     border-radius: 10px;
     background-color: white;
-    margin: 8px 0px 8px 8px;
+    margin-bottom: 8px;
+    margin-right: 8px;
   }
   .header_button.active {
     background-color: grey;
