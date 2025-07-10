@@ -14,7 +14,7 @@
   <div class="channel">
     #{{ channel.name }} (🧍{{ channel.user_count }})
     <div class="actions">
-      <span @click="join">↘️</span>
+      <a @click="join">↘️</a>
     </div>
   </div>
 </template>

@@ -42,9 +42,6 @@
     background-color: white;
     margin: 8px 0px 8px 8px;
   }
-  .header_button:hover {
-    cursor: pointer;
-  }
   .header_button.active {
     background-color: grey;
   }

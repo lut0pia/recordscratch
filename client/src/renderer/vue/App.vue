@@ -118,6 +118,9 @@
     min-width: 400px;
     max-width: 512px;
   }
+  a {
+    cursor: pointer;
+  }
   #content {
     display: flex;
     overflow: hidden;

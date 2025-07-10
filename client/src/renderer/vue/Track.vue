@@ -82,10 +82,10 @@
     <div class="right">
       <div class="duration">{{ pretty_duration }}</div>
       <div class="actions">
-        <span title="Preview" @click="preview">🎧</span>
-        <span v-if="can_save" title="Save" @click="save">💾</span>
-        <span v-if="can_queue" title="Queue" @click="queue">▶</span>
-        <span v-if="can_cancel" title="Cancel" @click="cancel">❌</span>
+        <a title="Preview" @click="preview">🎧</a>
+        <a v-if="can_save" title="Save" @click="save">💾</a>
+        <a v-if="can_queue" title="Queue" @click="queue">▶</a>
+        <a v-if="can_cancel" title="Cancel" @click="cancel">❌</a>
       </div>
     </div>
     <div class="left" :title="pretty_artist + ' - ' + track.title">
@@ -125,8 +125,5 @@
     display: inline;
     color: grey;
     font-style: italic;
-  }
-  .track .actions span {
-    cursor: pointer;
   }
 </style>
