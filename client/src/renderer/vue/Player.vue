@@ -74,6 +74,10 @@
             if(Math.abs(audio.currentTime - wanted_current_time) > 0.1) {
               audio.currentTime = wanted_current_time;
             }
+            audio.muted = shared.muted;
+            audio.volume = shared.volume;
+          } else {
+            audio.muted = false;
           }
 
           audio.play();

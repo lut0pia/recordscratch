@@ -27,7 +27,18 @@
     computed: {
       current_panel() {
         return shared.current_panel;
+      },
+      muted() {
+        return shared.muted;
+      },
+      muting_icon() {
+        return this.muted ? '🔈' : '🔊';
       }
+    },
+    methods: {
+      toggle_muted() {
+        shared.muted = !shared.muted;
+      },
     },
     mounted() {
       const app_el = document.getElementById('app');
@@ -79,6 +90,7 @@
     <span v-if="state.channel" id="channel_header">
       <span>#{{state.channel.name}}</span>
       <span>🧍{{ state.channel.user_count }}</span>
+      <a @click="toggle_muted">{{ muting_icon }}</a>
     </span>
   </div>
   <div id="content" v-if="state.connected">
