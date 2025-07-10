@@ -14,6 +14,12 @@ export default {
       });
     }
     const channel = server.get_channel(channel_name);
+    if(conn.channel == channel) {
+      return await msg.reply({
+        status: 'error',
+        text: `Already in channel`,
+      });
+    }
     channel.join(conn);
     await msg.reply({
       status: 'success',
