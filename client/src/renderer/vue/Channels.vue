@@ -25,6 +25,12 @@
     },
     async mounted() {
       await this.refresh()
+      this.interval = setInterval(async () => {
+        await this.refresh();
+      }, 15000);
+    },
+    unmounted() {
+      clearInterval(this.interval);
     },
     computed: {
       filtered_channels() {
