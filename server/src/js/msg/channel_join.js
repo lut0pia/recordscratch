@@ -1,4 +1,4 @@
-import RSChannel from '../RSChannel.js';
+import { RSConfig } from 'recordscratch-common';
 
 export default {
   name: 'channel_join',
@@ -7,7 +7,7 @@ export default {
   },
   on_message: async (server, conn, msg) => {
     const channel_name = msg.channel_name.toLowerCase();
-    if(!channel_name.match(RSChannel.name_regex)) {
+    if(!channel_name.match(RSConfig.channel_name_regex)) {
       return await msg.reply({
         status: 'error',
         text: `Invalid channel name`,

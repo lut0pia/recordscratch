@@ -1,5 +1,4 @@
 export default class RSChannel {
-  static name_regex = /^(\w+)(:\w+)?$/;
   constructor(server, name) {
     this.server = server;
     this.name = name;
