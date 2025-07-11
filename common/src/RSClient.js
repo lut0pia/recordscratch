@@ -207,9 +207,15 @@ export default class RSClient {
   }
 
   async get_channels() {
-    return (await this.request({
+    const channels = (await this.request({
       type: 'channel_list',
     })).channels;
+    for(let channel of channels) {
+      for(let post of channel.queue) {
+        await this.conditional_fetch_user(post.user_id);
+      }
+    }
+    return channels;
   }
 
   async join_channel(channel_name) {
