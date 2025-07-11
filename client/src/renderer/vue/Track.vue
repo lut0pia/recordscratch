@@ -89,7 +89,7 @@
       </div>
     </div>
     <div class="left" :title="pretty_artist + ' - ' + track.title">
-      <UserName v-if="post" ref="user_name" :users="state.users" :user_id="post.user_id" />
+      <UserName v-if="post" ref="user_name" :users="state.users" :user_id="post.user_id" /><br/>
       <span class="artist">{{ pretty_artist }} - </span>
       <span class="title">{{ track.title }}</span>
     </div>

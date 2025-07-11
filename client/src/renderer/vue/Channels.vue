@@ -3,6 +3,7 @@
   import HeaderTextInput from './HeaderTextInput.vue';
 
   export default {
+    props: ['state'],
     components: {
       Channel,
       HeaderTextInput
@@ -11,6 +12,7 @@
       return {
         search_query: '',
         channels: [],
+        now: 0,
       };
     },
     methods: {
@@ -24,10 +26,16 @@
       },
     },
     async mounted() {
-      await this.refresh()
+      this.now = await rs.get_server_time();
+      await this.refresh();
+      let counter = 1;
       this.interval = setInterval(async () => {
-        await this.refresh();
-      }, 15000);
+        this.now = await rs.get_server_time();
+        if(counter % 60 == 0) { // Refresh channel list every minute
+          await this.refresh();
+        }
+        counter += 1;
+      }, 1000);
     },
     unmounted() {
       clearInterval(this.interval);
@@ -58,7 +66,9 @@
   <div id="channels">
     <Channel
       v-for="channel in filtered_channels"
+      :state=state
       :channel=channel
+      :now=now
       @refresh="refresh"
     />
     <div v-if="channels.length == 0">There are no channels</div>
@@ -69,9 +79,5 @@
   #channels {
     max-width: 512px;
     margin: auto;
-  }
-  #channel_input {
-    margin: auto;
-    max-width: 412px;
   }
 </style>

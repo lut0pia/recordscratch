@@ -37,10 +37,10 @@
 </script>
 
 <template>
-  <div>
+  <span>
     <span class="user_name">{{ user_name }}</span>
     <span v-if="user_pronouns" class="pronouns">{{ user_pronouns }}</span>
-  </div>
+  </span>
 </template>
 <style>
   .user_name {

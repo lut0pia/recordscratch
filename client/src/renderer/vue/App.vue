@@ -95,7 +95,7 @@
   </div>
   <div id="content" v-if="state.connected">
     <div id="main">
-      <Channels v-if="current_panel == 'channels'"/>
+      <Channels v-if="current_panel == 'channels'" :state=state />
       <Library v-else-if="current_panel == 'library'" :state=state />
       <Queue v-else-if="current_panel == 'queue'" :state="state"/>
       <Chat v-else-if="current_panel == 'chat'" :state=state />
