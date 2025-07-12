@@ -1,4 +1,4 @@
-import { RSUserRegistry } from "recordscratch-common";
+import { RSUserSettings } from "recordscratch-common";
 
 export default {
   name: 'user_set_property',
@@ -7,20 +7,24 @@ export default {
     value: true,
   },
   on_message: async (server, conn, msg) => {
-    const property = RSUserRegistry.user_properties[msg.key];
+    const property = RSUserSettings.descriptions[msg.key];
     if(!property) {
-      msg.reply({
+      return msg.reply({
         status: 'error',
         text: 'Trying to set unknown property',
       });
-      return;
     }
-    if(property instanceof Function && !property(msg.value)) {
-      msg.reply({
+    if(!property.shared) {
+      return msg.reply({
         status: 'error',
-        text: 'Invalid property valid',
+        text: 'Trying to set private property',
       });
-      return;
+    }
+    if(property.regexp && !msg.value.match(property.regexp)) {
+      return msg.reply({
+        status: 'error',
+        text: 'Invalid property value',
+      });
     }
     server.users.set_user_property(conn.id, msg.key, msg.value);
     await msg.reply({

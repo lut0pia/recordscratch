@@ -1,8 +1,4 @@
 export default class RSUserRegistry {
-  static user_properties = {
-    'name': s => s.match(/^\w{0,24}$/),
-    'pronouns': s => s.match(/^[\w\/]{0,16}$/),
-  };
   constructor() {
     this.users = {};
   }
@@ -18,7 +14,7 @@ export default class RSUserRegistry {
   get_user(user_id) {
     return this.users[user_id];
   }
-  
+
   set_user_property(user_id, key, value) {
     this.get_user(user_id)[key] = value;
     if(this.on_user_property_change) {

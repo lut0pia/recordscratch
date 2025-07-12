@@ -339,6 +339,12 @@ export default class RSClient {
         key: key,
         value: value,
       });
+      if(result.status == 'error') {
+        this.user_log({
+          type: 'error',
+          text: `Could not upload shared setting: ${result.text}`,
+        });
+      }
     }
   }
 
